@@ -1,8 +1,8 @@
-import { History } from "../src/History";
-import { TypedEvent } from "../src/TypedEvent";
-import { NotifyPropertyChanged, PropertyChangedEventArgs } from "../src/Event";
+import { History } from '../src/History';
+import { TypedEvent } from '../src/TypedEvent';
+import { NotifyPropertyChanged, PropertyChangedEventArgs } from '../src/Event';
 
-test("Initial", () => {
+test('Initial', () => {
   const history = new History();
 
   expect(history.CanUndo).toBeFalsy();
@@ -10,7 +10,7 @@ test("Initial", () => {
   expect(history.CanClear).toBeFalsy();
 });
 
-test("Simple", () => {
+test('Simple', () => {
   const history = new History();
   const model = new TestModel(history);
 
@@ -60,14 +60,14 @@ test("Simple", () => {
   expect(history.CanClear).toBeFalsy();
 });
 
-test("PropertyChanged", () => {
+test('PropertyChanged', () => {
   const history = new History();
   const model = new TestModel(history);
 
   let count = 0;
-  let propertyName = "";
+  let propertyName = '';
 
-  model.PropertyChanged.on((e) => {
+  model.PropertyChanged.on(e => {
     ++count;
     propertyName = e.propertyName;
   });
@@ -77,29 +77,29 @@ test("PropertyChanged", () => {
   model.valueA = 1;
 
   expect(count).toBe(1);
-  expect(propertyName).toBe("valueA");
+  expect(propertyName).toBe('valueA');
 
   model.valueB = 10;
   expect(count).toBe(2);
-  expect(propertyName).toBe("valueB");
+  expect(propertyName).toBe('valueB');
 
   model.valueC = 100;
   expect(count).toBe(3);
-  expect(propertyName).toBe("valueC");
+  expect(propertyName).toBe('valueC');
 
   history.undo();
   expect(count).toBe(4);
-  expect(propertyName).toBe("valueC");
+  expect(propertyName).toBe('valueC');
   expect(model.valueC).toBe(0);
 
   history.undo();
   expect(count).toBe(5);
-  expect(propertyName).toBe("valueB");
+  expect(propertyName).toBe('valueB');
   expect(model.valueB).toBe(0);
 
   history.undo();
   expect(count).toBe(6);
-  expect(propertyName).toBe("valueA");
+  expect(propertyName).toBe('valueA');
   expect(model.valueA).toBe(0);
 });
 

@@ -32,15 +32,15 @@ export class TypedEvent<T = EventArgs> {
 
   emit = (event: T): void => {
     /** Update any general listeners */
-    this.listeners.forEach((listener) => listener(event));
+    this.listeners.forEach(listener => listener(event));
 
     /** Clear the `once` queue */
-    this.listenersOncer.forEach((listener) => listener(event));
+    this.listenersOncer.forEach(listener => listener(event));
     this.listenersOncer = [];
   };
 
   pipe = (te: TypedEvent<T>): Disposable => {
-    return this.on((e) => te.emit(e));
+    return this.on(e => te.emit(e));
   };
 }
 

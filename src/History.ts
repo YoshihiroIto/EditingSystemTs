@@ -1,4 +1,4 @@
-import { NotifyPropertyChanged, PropertyChangedEventArgs } from "./Event";
+import { NotifyPropertyChanged, PropertyChangedEventArgs } from './Event';
 
 export class History {
   get CanUndo(): boolean {
@@ -65,7 +65,7 @@ export class History {
       // 元のプロパティのセッター、ゲッターを作る
       Object.defineProperty(model, propertyName, {
         get: () => packingDesc.value,
-        set: (value) => {
+        set: value => {
           const oldValue = packingDesc.value;
 
           this.push(
@@ -86,10 +86,7 @@ export class History {
     }
   }
 
-  private RaisePropertyChanged(
-    model: NotifyPropertyChanged,
-    propertyName: string
-  ) {
+  private RaisePropertyChanged(model: NotifyPropertyChanged, propertyName: string) {
     model.PropertyChanged.emit(new PropertyChangedEventArgs(propertyName));
   }
 }
