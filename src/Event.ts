@@ -5,7 +5,7 @@ export interface NotifyPropertyChanged {
 }
 
 export class PropertyChangedEventArgs extends EventArgs {
-  constructor(public readonly PropertyName: string) {
+  constructor(public readonly propertyName: string) {
     super();
   }
 }

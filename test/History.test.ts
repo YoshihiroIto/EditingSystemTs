@@ -30,31 +30,31 @@ test("Simple", () => {
   expect(history.CanRedo).toBeFalsy();
   expect(history.CanClear).toBeTruthy();
 
-  history.Undo();
+  history.undo();
   expect(model.valueA).toBe(1);
   expect(history.CanUndo).toBeTruthy();
   expect(history.CanRedo).toBeTruthy();
   expect(history.CanClear).toBeTruthy();
 
-  history.Undo();
+  history.undo();
   expect(model.valueA).toBe(0);
   expect(history.CanUndo).toBeFalsy();
   expect(history.CanRedo).toBeTruthy();
   expect(history.CanClear).toBeTruthy();
 
-  history.Redo();
+  history.redo();
   expect(model.valueA).toBe(1);
   expect(history.CanUndo).toBeTruthy();
   expect(history.CanRedo).toBeTruthy();
   expect(history.CanClear).toBeTruthy();
 
-  history.Redo();
+  history.redo();
   expect(model.valueA).toBe(2);
   expect(history.CanUndo).toBeTruthy();
   expect(history.CanRedo).toBeFalsy();
   expect(history.CanClear).toBeTruthy();
 
-  history.Clear();
+  history.clear();
   expect(history.CanUndo).toBeFalsy();
   expect(history.CanRedo).toBeFalsy();
   expect(history.CanClear).toBeFalsy();
@@ -69,7 +69,7 @@ test("PropertyChanged", () => {
 
   model.PropertyChanged.on((e) => {
     ++count;
-    propertyName = e.PropertyName;
+    propertyName = e.propertyName;
   });
 
   expect(count).toBe(0);
@@ -87,17 +87,17 @@ test("PropertyChanged", () => {
   expect(count).toBe(3);
   expect(propertyName).toBe("valueC");
 
-  history.Undo();
+  history.undo();
   expect(count).toBe(4);
   expect(propertyName).toBe("valueC");
   expect(model.valueC).toBe(0);
 
-  history.Undo();
+  history.undo();
   expect(count).toBe(5);
   expect(propertyName).toBe("valueB");
   expect(model.valueB).toBe(0);
 
-  history.Undo();
+  history.undo();
   expect(count).toBe(6);
   expect(propertyName).toBe("valueA");
   expect(model.valueA).toBe(0);
@@ -111,6 +111,6 @@ class TestModel implements NotifyPropertyChanged {
   valueC = 0;
 
   constructor(history: History) {
-    history.InitializeModel(this);
+    history.register(this);
   }
 }

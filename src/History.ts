@@ -14,7 +14,7 @@ export class History {
   private readonly undoStack = new Array<HistoryAction>();
   private readonly redoStack = new Array<HistoryAction>();
 
-  Undo(): void {
+  undo(): void {
     if (this.CanUndo == false) return;
 
     const action = this.undoStack.pop();
@@ -25,7 +25,7 @@ export class History {
     this.redoStack.push(action);
   }
 
-  Redo(): void {
+  redo(): void {
     if (this.CanRedo == false) return;
 
     const action = this.redoStack.pop();
@@ -36,16 +36,16 @@ export class History {
     this.undoStack.push(action);
   }
 
-  Push(undo: UndoFunction, redo: RedoFunction): void {
+  push(undo: UndoFunction, redo: RedoFunction): void {
     this.undoStack.push(new HistoryAction(undo, redo));
   }
 
-  Clear(): void {
+  clear(): void {
     this.undoStack.splice(0, this.undoStack.length);
     this.redoStack.splice(0, this.redoStack.length);
   }
 
-  InitializeModel(model: NotifyPropertyChanged): void {
+  register(model: NotifyPropertyChanged): void {
     const propertyNames = Object.getOwnPropertyNames(model);
 
     for (const propertyName of propertyNames) {
@@ -68,7 +68,7 @@ export class History {
         set: (value) => {
           const oldValue = packingDesc.value;
 
-          this.Push(
+          this.push(
             () => {
               packingDesc.value = oldValue;
               this.RaisePropertyChanged(model, propertyName);
