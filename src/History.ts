@@ -1,3 +1,8 @@
+import {
+  NotifyPropertyChanged,
+  PropertyChangedEventArgs,
+} from "./NotifyPropertyChanged";
+
 export class History {
   get CanUndo(): boolean {
     return this.undoStack.length > 0;
@@ -43,7 +48,7 @@ export class History {
     this.redoStack.splice(0, this.redoStack.length);
   }
 
-  InitializeModel<T>(model: T): void {
+  InitializeModel(model: NotifyPropertyChanged): void {
     const propertyNames = Object.getOwnPropertyNames(model);
 
     for (const propertyName of propertyNames) {
@@ -69,22 +74,26 @@ export class History {
           this.Push(
             () => {
               packingDesc.value = oldValue;
-              this.RaisePropertyChanged(propertyName);
+              this.RaisePropertyChanged(model, propertyName);
             },
             () => {
               packingDesc.value = value;
-              this.RaisePropertyChanged(propertyName);
+              this.RaisePropertyChanged(model, propertyName);
             }
           );
 
           packingDesc.value = value;
+          this.RaisePropertyChanged(model, propertyName);
         },
       });
     }
   }
 
-  private RaisePropertyChanged(propertyName: string) {
-    // console.log(`RaisePropertyChanged: ${propertyName}`);
+  private RaisePropertyChanged(
+    model: NotifyPropertyChanged,
+    propertyName: string
+  ) {
+    model.PropertyChanged.emit(new PropertyChangedEventArgs(propertyName));
   }
 }
 
