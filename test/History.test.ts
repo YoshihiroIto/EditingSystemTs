@@ -1,22 +1,16 @@
-import { EditableModelBase } from "../src/EditableModelBase";
 import { History } from "../src/History";
 
-test("simple", () => {
-  const model = new TestModel_simple();
+test("Initial", () => {
+  const history = new History();
 
-  expect(model.history).toBe(null);
+  expect(history.CanUndo).toBeFalsy();
+  expect(history.CanRedo).toBeFalsy();
+  expect(history.CanClear).toBeFalsy();
 });
 
-test("SetupEditingSystem", () => {
+test("Simple", () => {
   const history = new History();
-  const model = new TestModel_SetupEditingSystem(history);
-
-  expect(model.history).toBe(history);
-});
-
-test("Basic op", () => {
-  const history = new History();
-  const model = new TestModel_HasNumberField(history);
+  const model = new TestModel(history);
 
   expect(history.CanUndo).toBeFalsy();
   expect(history.CanRedo).toBeFalsy();
@@ -64,32 +58,10 @@ test("Basic op", () => {
   expect(history.CanClear).toBeFalsy();
 });
 
-class TestModel_simple extends EditableModelBase {}
-
-class TestModel_SetupEditingSystem extends EditableModelBase {
-  constructor(history: History) {
-    super();
-    this.SetupEditingSystem(history);
-  }
-}
-
-class TestModel_HasNumberField extends EditableModelBase {
-  get value() {
-    return this._value;
-  }
-  set value(v: number) {
-    this.SetEditableProperty(
-      (v) => (this._value = v),
-      this._value,
-      v,
-      nameof(this.value)
-    );
-  }
-
-  private _value = 0;
+class TestModel {
+  public value = 0;
 
   constructor(history: History) {
-    super();
-    this.SetupEditingSystem(history);
+    history.InitializeModel(this);
   }
 }
