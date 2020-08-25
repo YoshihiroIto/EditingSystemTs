@@ -1,9 +1,6 @@
 import { History } from "../src/History";
 import { TypedEvent } from "../src/TypedEvent";
-import {
-  NotifyPropertyChanged,
-  PropertyChangedEventArgs,
-} from "../src/NotifyPropertyChanged";
+import { NotifyPropertyChanged, PropertyChangedEventArgs } from "../src/Event";
 
 test("Initial", () => {
   const history = new History();

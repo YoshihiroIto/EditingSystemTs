@@ -1,7 +1,4 @@
-import {
-  NotifyPropertyChanged,
-  PropertyChangedEventArgs,
-} from "./NotifyPropertyChanged";
+import { NotifyPropertyChanged, PropertyChangedEventArgs } from "./Event";
 
 export class History {
   get CanUndo(): boolean {
