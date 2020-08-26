@@ -60,7 +60,7 @@ test('ObservableCollection<T>.pop() empty', () => {
 
   let count = 0;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on(() => {
     ++count;
   });
 
@@ -112,4 +112,33 @@ test('ObservableCollection<T>.shift() empty', () => {
   expect(count).toBe(0);
   expect(oc.length).toBe(0);
   expect(r).toBe(undefined);
+});
+
+test('ObservableCollection<T>.unshift()', () => {
+  const oc = new ObservableCollection<string>();
+
+  oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+  let count = 0;
+  let args = NotifyCollectionChangedEventArgs.Empty;
+
+  oc.CollectionChanged.on(e => {
+    ++count;
+    args = e;
+  });
+
+  expect(count).toBe(0);
+
+  oc.unshift('A', 'B', 'C');
+  expect(count).toBe(1);
+  expect(args.action).toBe(NotifyCollectionChangedActions.Add);
+  expect(args.newItems?.length).toBe(3);
+  expect(args.oldItems).toBe(null);
+  expect(args.newStartingIndex).toBe(0);
+  expect(args.oldStartingIndex).toBe(-1);
+  expect(oc.length).toBe(13);
+  expect(oc[0]).toBe('A');
+  expect(oc[1]).toBe('B');
+  expect(oc[2]).toBe('C');
+  expect(oc[3]).toBe('0');
 });

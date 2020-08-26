@@ -51,12 +51,22 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
+
+  unshift(...items: T[]): number {
+    const r = super.unshift(...items);
+
+    this._CollectionChanged?.emit(
+      new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, 0, -1)
+    );
+
+    return r;
+  }
 }
 
 // x push()
 // x pop()
 // x shift()
-//   unshift()
+// x unshift()
 //   splice()
 //   sort()
 //   reverse()
