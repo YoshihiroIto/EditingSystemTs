@@ -20,7 +20,7 @@ test('ObservableCollection<T>.push()', () => {
   expect(count).toBe(1);
   expect(args.action).toBe(NotifyCollectionChangedActions.Add);
   expect(args.newItems?.length).toBe(3);
-  expect(args.oldItems).toBe(null);
+  expect(args.oldItems).toBeNull();
   expect(args.newStartingIndex).toBe(10);
   expect(args.oldStartingIndex).toBe(-1);
   expect(oc.length).toBe(13);
@@ -133,7 +133,7 @@ test('ObservableCollection<T>.unshift()', () => {
   expect(count).toBe(1);
   expect(args.action).toBe(NotifyCollectionChangedActions.Add);
   expect(args.newItems?.length).toBe(3);
-  expect(args.oldItems).toBe(null);
+  expect(args.oldItems).toBeNull();
   expect(args.newStartingIndex).toBe(0);
   expect(args.oldStartingIndex).toBe(-1);
   expect(oc.length).toBe(13);
@@ -141,4 +141,29 @@ test('ObservableCollection<T>.unshift()', () => {
   expect(oc[1]).toBe('B');
   expect(oc[2]).toBe('C');
   expect(oc[3]).toBe('0');
+});
+
+test('ObservableCollection<T>.sort()', () => {
+  const oc = new ObservableCollection<string>();
+
+  oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
+
+  let count = 0;
+  let args = NotifyCollectionChangedEventArgs.Empty;
+
+  oc.CollectionChanged.on(e => {
+    ++count;
+    args = e;
+  });
+
+  expect(count).toBe(0);
+
+  oc.sort();
+  expect(count).toBe(1);
+  expect(args.action).toBe(NotifyCollectionChangedActions.Reset);
+  expect(args.newItems).toBeNull();
+  expect(args.oldItems).toBeNull();
+  expect(args.newStartingIndex).toBe(-1);
+  expect(args.oldStartingIndex).toBe(-1);
+  expect(oc.length).toBe(10);
 });

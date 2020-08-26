@@ -61,6 +61,18 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
+
+  sort(compareFn?: (a: T, b: T) => number): this {
+    const r = super.sort(compareFn);
+
+    if (r != undefined) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
+      );
+    }
+
+    return r;
+  }
 }
 
 // x push()
@@ -68,5 +80,5 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 // x shift()
 // x unshift()
 //   splice()
-//   sort()
+// x sort()
 //   reverse()
