@@ -85,12 +85,26 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
-}
 
-// x push()
-// x pop()
-// x shift()
-// x unshift()
-//   splice()
-// x sort()
-// x reverse()
+  splice(start: number, deleteCount?: number, ...items: T[]): T[] {
+    if (deleteCount == null) {
+      deleteCount = this.length;
+    }
+
+    const r = super.splice(start, deleteCount, ...items);
+
+    if (deleteCount > 0) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, r, -1, start)
+      );
+    }
+
+    if (items.length > 0) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, start, -1)
+      );
+    }
+
+    return r;
+  }
+}
