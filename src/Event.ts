@@ -15,12 +15,12 @@ export interface NotifyCollectionChanged {
 }
 
 export const NotifyCollectionChangedActions = {
-  Unset: 0,
-  Add: 1,
-  Move: 2,
-  Remove: 3,
-  Replace: 4,
-  Reset: 5,
+  Unset: 'Unset',
+  Add: 'Add',
+  Move: 'Move',
+  Remove: 'Remove',
+  Replace: 'Replace',
+  Reset: 'Reset',
 } as const;
 
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];
