@@ -14,19 +14,6 @@ export interface NotifyCollectionChanged {
   readonly CollectionChanged: TypedEvent<NotifyCollectionChangedEventArgs>;
 }
 
-export class NotifyCollectionChangedEventArgs extends EventArgs {
-  constructor(
-    public readonly action: NotifyCollectionChangedAction,
-    public readonly newItems: any[],
-    public readonly oldItems: any[],
-    public readonly startingIndex: number
-  ) {
-    super();
-
-    throw new Error('Not implement');
-  }
-}
-
 export const NotifyCollectionChangedActions = {
   Unset: 0,
   Add: 1,
@@ -37,3 +24,23 @@ export const NotifyCollectionChangedActions = {
 } as const;
 
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];
+
+export class NotifyCollectionChangedEventArgs extends EventArgs {
+  public static readonly Empty: NotifyCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(
+    NotifyCollectionChangedActions.Unset,
+    null,
+    null,
+    -1,
+    -1
+  );
+
+  constructor(
+    public readonly action: NotifyCollectionChangedAction,
+    public readonly newItems: unknown[] | null,
+    public readonly oldItems: unknown[] | null,
+    public readonly newStartingIndex: number,
+    public readonly oldStartingIndex: number
+  ) {
+    super();
+  }
+}
