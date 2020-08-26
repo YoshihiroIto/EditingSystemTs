@@ -73,6 +73,18 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
+
+  reverse(): T[] {
+    const r = super.reverse();
+
+    if (r != undefined) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
+      );
+    }
+
+    return r;
+  }
 }
 
 // x push()
@@ -81,4 +93,4 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 // x unshift()
 //   splice()
 // x sort()
-//   reverse()
+// x reverse()

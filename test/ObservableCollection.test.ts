@@ -167,3 +167,38 @@ test('ObservableCollection<T>.sort()', () => {
   expect(args.oldStartingIndex).toBe(-1);
   expect(oc.length).toBe(10);
 });
+
+test('ObservableCollection<T>.reverse()', () => {
+  const oc = new ObservableCollection<string>();
+
+  oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
+
+  let count = 0;
+  let args = NotifyCollectionChangedEventArgs.Empty;
+
+  oc.CollectionChanged.on(e => {
+    ++count;
+    args = e;
+  });
+
+  expect(count).toBe(0);
+
+  oc.reverse();
+  expect(count).toBe(1);
+  expect(args.action).toBe(NotifyCollectionChangedActions.Reset);
+  expect(args.newItems).toBeNull();
+  expect(args.oldItems).toBeNull();
+  expect(args.newStartingIndex).toBe(-1);
+  expect(args.oldStartingIndex).toBe(-1);
+  expect(oc.length).toBe(10);
+  expect(oc[0]).toBe('0');
+  expect(oc[1]).toBe('1');
+  expect(oc[2]).toBe('2');
+  expect(oc[3]).toBe('3');
+  expect(oc[4]).toBe('4');
+  expect(oc[5]).toBe('5');
+  expect(oc[6]).toBe('6');
+  expect(oc[7]).toBe('7');
+  expect(oc[8]).toBe('8');
+  expect(oc[9]).toBe('9');
+});
