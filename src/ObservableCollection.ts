@@ -27,4 +27,26 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
+
+  pop(): T | undefined {
+    const r = super.pop();
+
+    if (r != undefined) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, this.length - 1)
+      );
+    }
+
+    return r;
+  }
 }
+
+//   "copyWithin",
+//   "fill",
+// x "pop",
+// x "push",
+//   "reverse",
+//   "shift",
+//   "sort",
+//   "splice",
+//   "unshift",
