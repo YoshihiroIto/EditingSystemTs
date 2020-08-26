@@ -39,14 +39,24 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     return r;
   }
+
+  shift(): T | undefined {
+    const r = super.shift();
+
+    if (r != undefined) {
+      this._CollectionChanged?.emit(
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, 0)
+      );
+    }
+
+    return r;
+  }
 }
 
-//   "copyWithin",
-//   "fill",
-// x "pop",
-// x "push",
-//   "reverse",
-//   "shift",
-//   "sort",
-//   "splice",
-//   "unshift",
+// x push()
+// x pop()
+// x shift()
+//   unshift()
+//   splice()
+//   sort()
+//   reverse()

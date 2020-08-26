@@ -69,3 +69,47 @@ test('ObservableCollection<T>.pop() empty', () => {
   expect(oc.length).toBe(0);
   expect(r).toBe(undefined);
 });
+
+test('ObservableCollection<T>.shift()', () => {
+  const oc = new ObservableCollection<string>();
+
+  oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+  let count = 0;
+  let args = NotifyCollectionChangedEventArgs.Empty;
+
+  oc.CollectionChanged.on(e => {
+    ++count;
+    args = e;
+  });
+
+  expect(count).toBe(0);
+
+  oc.push('A', 'B', 'C');
+
+  const r = oc.shift();
+  expect(count).toBe(2);
+  expect(args.action).toBe(NotifyCollectionChangedActions.Remove);
+  expect(args.newItems).toBeNull();
+  expect(args.oldItems?.length).toBe(1);
+  expect(args.oldItems != null ? args.oldItems[0] : 'XXXXX').toBe('0');
+  expect(args.newStartingIndex).toBe(-1);
+  expect(args.oldStartingIndex).toBe(0);
+  expect(oc.length).toBe(12);
+  expect(r).toBe('0');
+});
+
+test('ObservableCollection<T>.shift() empty', () => {
+  const oc = new ObservableCollection<string>();
+
+  let count = 0;
+
+  oc.CollectionChanged.on(() => {
+    ++count;
+  });
+
+  const r = oc.shift();
+  expect(count).toBe(0);
+  expect(oc.length).toBe(0);
+  expect(r).toBe(undefined);
+});
