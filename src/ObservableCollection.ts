@@ -22,6 +22,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
     const r = super.push(...items);
 
     this._CollectionChanged?.emit(
+      this,
       new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, length, -1)
     );
 
@@ -33,6 +34,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, this.length - 1)
       );
     }
@@ -45,6 +47,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, 0)
       );
     }
@@ -56,6 +59,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
     const r = super.unshift(...items);
 
     this._CollectionChanged?.emit(
+      this,
       new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, 0, -1)
     );
 
@@ -67,6 +71,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
       );
     }
@@ -79,6 +84,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
       );
     }
@@ -95,12 +101,14 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     if (deleteCount > 0) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, r, -1, start)
       );
     }
 
     if (items.length > 0) {
       this._CollectionChanged?.emit(
+        this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, start, -1)
       );
     }

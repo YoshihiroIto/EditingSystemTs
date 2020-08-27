@@ -67,8 +67,9 @@ test('PropertyChanged', () => {
   let count = 0;
   let propertyName = '';
 
-  model.PropertyChanged.on(e => {
+  model.PropertyChanged.on((_, e) => {
     ++count;
+
     propertyName = e.propertyName;
   });
 

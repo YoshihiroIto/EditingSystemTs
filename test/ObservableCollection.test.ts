@@ -9,7 +9,7 @@ test('ObservableCollection<T>.push()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -34,7 +34,7 @@ test('ObservableCollection<T>.pop()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -78,7 +78,7 @@ test('ObservableCollection<T>.shift()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -122,7 +122,7 @@ test('ObservableCollection<T>.unshift()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -151,7 +151,7 @@ test('ObservableCollection<T>.sort()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -176,7 +176,7 @@ test('ObservableCollection<T>.reverse()', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -211,7 +211,7 @@ test('ObservableCollection<T>.splice() deleteCount is null', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -238,7 +238,7 @@ test('ObservableCollection<T>.splice() deleteCount is not null', () => {
   let count = 0;
   let args = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
     args = e;
   });
@@ -270,7 +270,7 @@ test('ObservableCollection<T>.splice() deleteCount, items', () => {
   let args1 = NotifyCollectionChangedEventArgs.Empty;
   let args2 = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on(e => {
+  oc.CollectionChanged.on((_, e) => {
     ++count;
 
     if (count === 1) {
