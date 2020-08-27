@@ -50,7 +50,7 @@ test('ObservableCollection<T>.pop()', () => {
   expect(args.oldItems?.length).toBe(1);
   expect(args.oldItems != null ? args.oldItems[0] : 'XXXXX').toBe('C');
   expect(args.newStartingIndex).toBe(-1);
-  expect(args.oldStartingIndex).toBe(11);
+  expect(args.oldStartingIndex).toBe(12);
   expect(oc.length).toBe(12);
   expect(r).toBe('C');
 });

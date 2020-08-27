@@ -35,7 +35,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
     if (r != undefined) {
       this._CollectionChanged?.emit(
         this,
-        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, this.length - 1)
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, this.length)
       );
     }
 
