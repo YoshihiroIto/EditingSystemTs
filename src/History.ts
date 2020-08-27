@@ -1,4 +1,5 @@
-import { NotifyPropertyChanged, PropertyChangedEventArgs } from './Event';
+import { NotifyPropertyChanged, PropertyChangedEventArgs, NotifyCollectionChangedActions } from './Event';
+import { ObservableCollection } from './ObservableCollection';
 
 export class History {
   get CanUndo(): boolean {
@@ -14,13 +15,17 @@ export class History {
   private readonly undoStack = new Array<HistoryAction>();
   private readonly redoStack = new Array<HistoryAction>();
 
+  private isInUndoing = false;
+
   undo(): void {
     if (this.CanUndo == false) return;
 
     const action = this.undoStack.pop();
     if (action == null) throw new Error();
 
+    this.isInUndoing = true;
     action.Undo();
+    this.isInUndoing = false;
 
     this.redoStack.push(action);
   }
@@ -31,7 +36,9 @@ export class History {
     const action = this.redoStack.pop();
     if (action == null) throw new Error();
 
+    this.isInUndoing = true;
     action.Redo();
+    this.isInUndoing = false;
 
     this.undoStack.push(action);
   }
@@ -50,7 +57,20 @@ export class History {
 
     for (const propertyName of propertyNames) {
       const desc = Object.getOwnPropertyDescriptor(model, propertyName);
-      if (desc == null) continue;
+      if (desc == null) {
+        continue;
+      }
+
+      // 管理外プロパティをはじく
+      if (propertyName === 'PropertyChanged') {
+        continue;
+      }
+
+      if (desc.value != null) {
+        if (desc.value instanceof ObservableCollection /* NotifyCollectionChanged */) {
+          this.setupObservableCollection(desc.value as ObservableCollection<unknown>);
+        }
+      }
 
       // パッキングプロパティを作る
       const packingName = `_${propertyName}`;
@@ -60,7 +80,9 @@ export class History {
       });
 
       const packingDesc = Object.getOwnPropertyDescriptor(model, packingName);
-      if (packingDesc == null) continue;
+      if (packingDesc == null) {
+        continue;
+      }
 
       // 元のプロパティのセッター、ゲッターを作る
       Object.defineProperty(model, propertyName, {
@@ -71,23 +93,90 @@ export class History {
           this.push(
             () => {
               packingDesc.value = oldValue;
-              this.RaisePropertyChanged(model, propertyName);
+              this.raisePropertyChanged(model, propertyName);
             },
             () => {
               packingDesc.value = value;
-              this.RaisePropertyChanged(model, propertyName);
+              this.raisePropertyChanged(model, propertyName);
             }
           );
 
           packingDesc.value = value;
-          this.RaisePropertyChanged(model, propertyName);
+          this.raisePropertyChanged(model, propertyName);
         },
       });
     }
   }
 
-  private RaisePropertyChanged(model: NotifyPropertyChanged, propertyName: string) {
-    model.PropertyChanged.emit(new PropertyChangedEventArgs(propertyName));
+  private raisePropertyChanged(model: NotifyPropertyChanged, propertyName: string) {
+    model.PropertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
+  }
+
+  private setupObservableCollection(target: ObservableCollection<unknown>) {
+    target.CollectionChanged.on((sender, e) => {
+      if (this.isInUndoing) {
+        return;
+      }
+
+      if (sender instanceof ObservableCollection == false) {
+        throw new Error();
+      }
+
+      if (sender instanceof ObservableCollection) {
+        switch (e.action) {
+          case NotifyCollectionChangedActions.Add:
+            {
+              const addItems = e.newItems;
+              if (addItems == null) {
+                throw new Error();
+              }
+
+              const undo = () => sender.splice(e.newStartingIndex, addItems.length);
+              const redo = () => sender.splice(e.newStartingIndex, 0, ...addItems);
+
+              this.push(undo, redo);
+            }
+
+            break;
+
+          case NotifyCollectionChangedActions.Remove:
+            {
+              const oldItems = e.oldItems;
+              if (oldItems == null) {
+                throw new Error();
+              }
+
+              const undo = () => sender.splice(e.oldStartingIndex, 0, ...oldItems);
+              const redo = () => sender.splice(e.oldStartingIndex, oldItems.length);
+
+              this.push(undo, redo);
+            }
+            break;
+
+          case NotifyCollectionChangedActions.Reset:
+            {
+              const redo = () => {
+                const oldItems = e.oldItems;
+                if (oldItems == null) {
+                  throw new Error();
+                }
+
+                const old = ObservableCollection.from(sender);
+                sender.splice(0);
+                sender.push(...oldItems);
+                e.setOldItemsInternal(old);
+              };
+              const undo = redo;
+
+              this.push(undo, redo);
+            }
+            break;
+
+          default:
+            throw new Error(`Not implement: ${e.action}`);
+        }
+      }
+    });
   }
 }
 

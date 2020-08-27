@@ -34,12 +34,32 @@ export class NotifyCollectionChangedEventArgs extends EventArgs {
     -1
   );
 
+  get action(): NotifyCollectionChangedAction {
+    return this._action;
+  }
+  get newItems(): unknown[] | null {
+    return this._newItems;
+  }
+  get oldItems(): unknown[] | null {
+    return this._oldItems;
+  }
+  get newStartingIndex(): number {
+    return this._newStartingIndex;
+  }
+  get oldStartingIndex(): number {
+    return this._oldStartingIndex;
+  }
+
+  public setOldItemsInternal(items: unknown[] | null): void {
+    this._oldItems = items;
+  }
+
   constructor(
-    public readonly action: NotifyCollectionChangedAction,
-    public readonly newItems: unknown[] | null,
-    public readonly oldItems: unknown[] | null,
-    public readonly newStartingIndex: number,
-    public readonly oldStartingIndex: number
+    private _action: NotifyCollectionChangedAction,
+    private _newItems: unknown[] | null,
+    private _oldItems: unknown[] | null,
+    private _newStartingIndex: number,
+    private _oldStartingIndex: number
   ) {
     super();
   }

@@ -67,12 +67,13 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
   }
 
   sort(compareFn?: (a: T, b: T) => number): this {
+    const old = Array.from(this);
     const r = super.sort(compareFn);
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
         this,
-        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, old, -1, 0)
       );
     }
 
@@ -80,12 +81,13 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
   }
 
   reverse(): T[] {
+    const old = Array.from(this);
     const r = super.reverse();
 
     if (r != undefined) {
       this._CollectionChanged?.emit(
         this,
-        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, null, -1, -1)
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, old, -1, 0)
       );
     }
 
@@ -94,7 +96,7 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
   splice(start: number, deleteCount?: number, ...items: T[]): T[] {
     if (deleteCount == null) {
-      deleteCount = this.length;
+      deleteCount = this.length - start;
     }
 
     const r = super.splice(start, deleteCount, ...items);

@@ -162,9 +162,8 @@ test('ObservableCollection<T>.sort()', () => {
   expect(count).toBe(1);
   expect(args.action).toBe(NotifyCollectionChangedActions.Reset);
   expect(args.newItems).toBeNull();
-  expect(args.oldItems).toBeNull();
   expect(args.newStartingIndex).toBe(-1);
-  expect(args.oldStartingIndex).toBe(-1);
+  expect(args.oldStartingIndex).toBe(0);
   expect(oc.length).toBe(10);
 });
 
@@ -187,9 +186,8 @@ test('ObservableCollection<T>.reverse()', () => {
   expect(count).toBe(1);
   expect(args.action).toBe(NotifyCollectionChangedActions.Reset);
   expect(args.newItems).toBeNull();
-  expect(args.oldItems).toBeNull();
   expect(args.newStartingIndex).toBe(-1);
-  expect(args.oldStartingIndex).toBe(-1);
+  expect(args.oldStartingIndex).toBe(0);
   expect(oc.length).toBe(10);
   expect(oc[0]).toBe('0');
   expect(oc[1]).toBe('1');
