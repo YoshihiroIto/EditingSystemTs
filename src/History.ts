@@ -29,7 +29,7 @@ export class History {
 
     try {
       this.isInUndoing = true;
-      action.Undo();
+      action.undo();
     } finally {
       this.isInUndoing = false;
     }
@@ -49,7 +49,7 @@ export class History {
 
     try {
       this.isInUndoing = true;
-      action.Redo();
+      action.redo();
     } finally {
       this.isInUndoing = false;
     }
@@ -72,7 +72,9 @@ export class History {
   }
 
   endBatch(): void {
-    if (this.batchDepth == 0) throw new Error('Batch recording has not begun.');
+    if (this.batchDepth == 0) {
+      throw new Error('Batch recording has not begun.');
+    }
 
     --this.batchDepth;
 
@@ -98,8 +100,8 @@ export class History {
       const thisBatchHistory = this.batchHistory;
 
       this.push(
-        () => thisBatchHistory.UndoAll(),
-        () => thisBatchHistory.RedoAll()
+        () => thisBatchHistory.undoAll(),
+        () => thisBatchHistory.redoAll()
       );
     }
 
@@ -113,10 +115,9 @@ export class History {
       }
 
       this.batchHistory.push(undo, redo);
-      return;
+    } else {
+      this.undoStack.push(new HistoryAction(undo, redo));
     }
-
-    this.undoStack.push(new HistoryAction(undo, redo));
   }
 
   clear(): void {
@@ -241,15 +242,11 @@ export class History {
             break;
 
           case NotifyCollectionChangedActions.BeginBatch:
-            {
-              this.beginBatch();
-            }
+            this.beginBatch();
             break;
 
           case NotifyCollectionChangedActions.EndBatch:
-            {
-              this.endBatch();
-            }
+            this.endBatch();
             break;
 
           default:
@@ -263,12 +260,12 @@ export class History {
 }
 
 class HistoryAction {
-  public readonly Undo: UndoFunction;
-  public readonly Redo: RedoFunction;
+  public readonly undo: UndoFunction;
+  public readonly redo: RedoFunction;
 
   constructor(undo: UndoFunction, redo: RedoFunction) {
-    this.Undo = undo;
-    this.Redo = redo;
+    this.undo = undo;
+    this.redo = redo;
   }
 }
 
@@ -281,17 +278,13 @@ interface RedoFunction extends Function {
 }
 
 class BatchHistory extends History {
-  constructor() {
-    super();
-  }
-
-  UndoAll(): void {
+  undoAll(): void {
     while (this.canUndo) {
       this.undo();
     }
   }
 
-  RedoAll(): void {
+  redoAll(): void {
     while (this.canRedo) {
       this.redo();
     }
