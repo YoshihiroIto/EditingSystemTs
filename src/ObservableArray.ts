@@ -1,7 +1,7 @@
 import { TypedEvent } from './TypedEvent';
 import { NotifyCollectionChangedEventArgs, NotifyCollectionChangedActions } from './Event';
 
-export class ObservableCollection<T> extends Array<T> {
+export class ObservableArray<T> extends Array<T> {
   get CollectionChanged(): TypedEvent<NotifyCollectionChangedEventArgs> {
     if (this._CollectionChanged == null) {
       this._CollectionChanged = new TypedEvent<NotifyCollectionChangedEventArgs>();

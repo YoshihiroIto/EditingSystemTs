@@ -4,7 +4,7 @@ import {
   NotifyCollectionChangedActions,
   NotifyCollectionChangedEventArgs,
 } from './Event';
-import { ObservableCollection } from './ObservableCollection';
+import { ObservableArray } from './ObservableArray';
 
 export class History {
   get canUndo(): boolean {
@@ -188,7 +188,7 @@ export class History {
         continue;
       }
 
-      if (desc.value instanceof ObservableCollection) {
+      if (desc.value instanceof ObservableArray) {
         desc.value.CollectionChanged.on(onCollectionChanged);
       }
 
@@ -212,26 +212,26 @@ export class History {
 
           this.push(
             () => {
-              if (packingDesc.value instanceof ObservableCollection) {
+              if (packingDesc.value instanceof ObservableArray) {
                 packingDesc.value.CollectionChanged.off(onCollectionChanged);
               }
 
               packingDesc.value = oldValue;
 
-              if (packingDesc.value instanceof ObservableCollection) {
+              if (packingDesc.value instanceof ObservableArray) {
                 packingDesc.value.CollectionChanged.on(onCollectionChanged);
               }
 
               this.raisePropertyChanged(model, propertyName);
             },
             () => {
-              if (packingDesc.value instanceof ObservableCollection) {
+              if (packingDesc.value instanceof ObservableArray) {
                 packingDesc.value.CollectionChanged.off(onCollectionChanged);
               }
 
               packingDesc.value = value;
 
-              if (packingDesc.value instanceof ObservableCollection) {
+              if (packingDesc.value instanceof ObservableArray) {
                 packingDesc.value.CollectionChanged.on(onCollectionChanged);
               }
 
@@ -239,13 +239,13 @@ export class History {
             }
           );
 
-          if (packingDesc.value instanceof ObservableCollection) {
+          if (packingDesc.value instanceof ObservableArray) {
             packingDesc.value.CollectionChanged.off(onCollectionChanged);
           }
 
           packingDesc.value = value;
 
-          if (packingDesc.value instanceof ObservableCollection) {
+          if (packingDesc.value instanceof ObservableArray) {
             packingDesc.value.CollectionChanged.on(onCollectionChanged);
           }
 
@@ -264,7 +264,7 @@ export class History {
       return;
     }
 
-    if (sender instanceof ObservableCollection) {
+    if (sender instanceof ObservableArray) {
       if (e.isBeginBatch) {
         this.beginBatch();
       }
@@ -307,7 +307,7 @@ export class History {
                 throw new Error();
               }
 
-              const old = ObservableCollection.from(sender);
+              const old = ObservableArray.from(sender);
               sender.splice(0);
               sender.push(...oldItems);
               e.setOldItemsInternal(old);

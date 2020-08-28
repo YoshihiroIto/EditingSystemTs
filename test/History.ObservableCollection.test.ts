@@ -1,7 +1,7 @@
 import { History } from '../src/History';
 import { TypedEvent } from '../src/TypedEvent';
 import { NotifyPropertyChanged, PropertyChangedEventArgs } from '../src/Event';
-import { ObservableCollection } from '../src/ObservableCollection';
+import { ObservableArray } from '../src/ObservableArray';
 
 test('push()', () => {
   const history = new History();
@@ -223,7 +223,7 @@ test('reverse()', () => {
   expect(model.valueOc[2]).toBe('C');
 });
 
-test('ObservableCollection<T>.splice() deleteCount is null', () => {
+test('ObservableArray<T>.splice() deleteCount is null', () => {
   const history = new History();
   const model = new TestModel(history);
 
@@ -249,7 +249,7 @@ test('ObservableCollection<T>.splice() deleteCount is null', () => {
   expect(model.valueOc.length).toBe(0);
 });
 
-test('ObservableCollection<T>.splice() deleteCount is not null', () => {
+test('ObservableArray<T>.splice() deleteCount is not null', () => {
   const history = new History();
   const model = new TestModel(history);
 
@@ -289,7 +289,7 @@ test('ObservableCollection<T>.splice() deleteCount is not null', () => {
   expect(model.valueOc[6]).toBe('9');
 });
 
-test('ObservableCollection<T>.splice() deleteCount, items', () => {
+test('ObservableArray<T>.splice() deleteCount, items', () => {
   const history = new History();
   const model = new TestModel(history);
 
@@ -338,7 +338,7 @@ test('ObservableCollection<T>.splice() deleteCount, items', () => {
 class TestModel implements NotifyPropertyChanged {
   readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
-  valueOc = new ObservableCollection<string>();
+  valueOc = new ObservableArray<string>();
 
   constructor(history: History) {
     history.register(this);

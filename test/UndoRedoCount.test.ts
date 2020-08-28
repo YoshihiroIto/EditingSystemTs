@@ -1,7 +1,7 @@
 import { History } from '../src/History';
 import { TypedEvent } from '../src/TypedEvent';
 import { NotifyPropertyChanged, PropertyChangedEventArgs } from '../src/Event';
-import { ObservableCollection } from '../src/ObservableCollection';
+import { ObservableArray } from '../src/ObservableArray';
 
 test('Basic', () => {
   const history = new History();
@@ -41,7 +41,7 @@ class TestModel implements NotifyPropertyChanged {
   readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
   valueA = 0;
-  valueB = new ObservableCollection<number>();
+  valueB = new ObservableArray<number>();
 
   constructor(history: History) {
     history.register(this);

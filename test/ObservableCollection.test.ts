@@ -1,8 +1,8 @@
-import { ObservableCollection } from '../src/ObservableCollection';
+import { ObservableArray } from '../src/ObservableArray';
 import { NotifyCollectionChangedEventArgs, NotifyCollectionChangedActions } from '../src/Event';
 
-test('ObservableCollection<T>.push()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.push()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -26,8 +26,8 @@ test('ObservableCollection<T>.push()', () => {
   expect(oc.length).toBe(13);
 });
 
-test('ObservableCollection<T>.pop()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.pop()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -55,8 +55,8 @@ test('ObservableCollection<T>.pop()', () => {
   expect(r).toBe('C');
 });
 
-test('ObservableCollection<T>.pop() empty', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.pop() empty', () => {
+  const oc = new ObservableArray<string>();
 
   let count = 0;
 
@@ -70,8 +70,8 @@ test('ObservableCollection<T>.pop() empty', () => {
   expect(r).toBe(undefined);
 });
 
-test('ObservableCollection<T>.shift()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.shift()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -99,8 +99,8 @@ test('ObservableCollection<T>.shift()', () => {
   expect(r).toBe('0');
 });
 
-test('ObservableCollection<T>.shift() empty', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.shift() empty', () => {
+  const oc = new ObservableArray<string>();
 
   let count = 0;
 
@@ -114,8 +114,8 @@ test('ObservableCollection<T>.shift() empty', () => {
   expect(r).toBe(undefined);
 });
 
-test('ObservableCollection<T>.unshift()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.unshift()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -143,8 +143,8 @@ test('ObservableCollection<T>.unshift()', () => {
   expect(oc[3]).toBe('0');
 });
 
-test('ObservableCollection<T>.sort()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.sort()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
@@ -167,8 +167,8 @@ test('ObservableCollection<T>.sort()', () => {
   expect(oc.length).toBe(10);
 });
 
-test('ObservableCollection<T>.reverse()', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.reverse()', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
@@ -201,8 +201,8 @@ test('ObservableCollection<T>.reverse()', () => {
   expect(oc[9]).toBe('9');
 });
 
-test('ObservableCollection<T>.splice() deleteCount is null', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.splice() deleteCount is null', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -228,8 +228,8 @@ test('ObservableCollection<T>.splice() deleteCount is null', () => {
   expect(oc[2]).toBe('2');
 });
 
-test('ObservableCollection<T>.splice() deleteCount is not null', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.splice() deleteCount is not null', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -259,8 +259,8 @@ test('ObservableCollection<T>.splice() deleteCount is not null', () => {
   expect(oc[6]).toBe('9');
 });
 
-test('ObservableCollection<T>.splice() deleteCount, items', () => {
-  const oc = new ObservableCollection<string>();
+test('ObservableArray<T>.splice() deleteCount, items', () => {
+  const oc = new ObservableArray<string>();
 
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
