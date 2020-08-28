@@ -21,9 +21,6 @@ export const NotifyCollectionChangedActions = {
   Remove: 'Remove',
   Replace: 'Replace',
   Reset: 'Reset',
-  //
-  BeginBatch: 'BeginBatch',
-  EndBatch: 'EndBatch',
 } as const;
 
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];
@@ -52,18 +49,31 @@ export class NotifyCollectionChangedEventArgs extends EventArgs {
   get oldStartingIndex(): number {
     return this._oldStartingIndex;
   }
+  get isBeginBatch(): boolean {
+    return this._isBeginBatch;
+  }
+  get isEndBatch(): boolean {
+    return this._isEndBatch;
+  }
 
   public setOldItemsInternal(items: unknown[] | null): void {
     this._oldItems = items;
   }
+
+  private _isBeginBatch = false;
+  private _isEndBatch = false;
 
   constructor(
     private _action: NotifyCollectionChangedAction,
     private _newItems: unknown[] | null,
     private _oldItems: unknown[] | null,
     private _newStartingIndex: number,
-    private _oldStartingIndex: number
+    private _oldStartingIndex: number,
+    { isBeginBatch = false, isEndBatch = false }: { isBeginBatch?: boolean; isEndBatch?: boolean } = {}
   ) {
     super();
+
+    this._isBeginBatch = isBeginBatch;
+    this._isEndBatch = isEndBatch;
   }
 }

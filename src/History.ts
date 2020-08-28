@@ -192,6 +192,10 @@ export class History {
       }
 
       if (sender instanceof ObservableCollection) {
+        if (e.isBeginBatch) {
+          this.beginBatch();
+        }
+
         switch (e.action) {
           case NotifyCollectionChangedActions.Add:
             {
@@ -241,16 +245,12 @@ export class History {
             }
             break;
 
-          case NotifyCollectionChangedActions.BeginBatch:
-            this.beginBatch();
-            break;
-
-          case NotifyCollectionChangedActions.EndBatch:
-            this.endBatch();
-            break;
-
           default:
             throw new Error(`Not implement: ${e.action}`);
+        }
+
+        if (e.isEndBatch) {
+          this.endBatch();
         }
       } else {
         throw new Error();
