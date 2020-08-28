@@ -1,5 +1,10 @@
-import {NotifyCollectionChangedActions, NotifyCollectionChangedEventArgs, NotifyPropertyChanged, PropertyChangedEventArgs,} from './Event';
-import {ObservableArray} from './ObservableArray';
+import {
+  NotifyCollectionChangedActions,
+  NotifyCollectionChangedEventArgs,
+  NotifyPropertyChanged,
+  PropertyChangedEventArgs,
+} from './Event';
+import { ObservableArray } from './ObservableArray';
 
 export class History {
   get canUndo(): boolean {
