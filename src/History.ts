@@ -17,7 +17,7 @@ export class History {
     return this.canUndo || this.canRedo;
   }
 
-  get undoRedoCount(): [number, number] {
+  get undoRedoCount(): [undo: number, redo: number] {
     return [this.undoStack.length, this.redoStack.length];
   }
 
