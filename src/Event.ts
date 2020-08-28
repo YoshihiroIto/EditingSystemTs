@@ -22,7 +22,7 @@ export const NotifyCollectionChangedActions = {
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];
 
 export class NotifyCollectionChangedEventArgs extends EventArgs {
-  public static readonly Empty: NotifyCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(
+  public static readonly empty: NotifyCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(
     NotifyCollectionChangedActions.Unset,
     null,
     null,

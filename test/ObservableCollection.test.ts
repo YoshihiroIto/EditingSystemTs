@@ -7,7 +7,7 @@ test('ObservableArray<T>.push()', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -32,7 +32,7 @@ test('ObservableArray<T>.pop()', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -76,7 +76,7 @@ test('ObservableArray<T>.shift()', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -120,7 +120,7 @@ test('ObservableArray<T>.unshift()', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -149,7 +149,7 @@ test('ObservableArray<T>.sort()', () => {
   oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -173,7 +173,7 @@ test('ObservableArray<T>.reverse()', () => {
   oc.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -207,7 +207,7 @@ test('ObservableArray<T>.splice() deleteCount is null', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -234,7 +234,7 @@ test('ObservableArray<T>.splice() deleteCount is not null', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args = NotifyCollectionChangedEventArgs.Empty;
+  let args = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;
@@ -265,8 +265,8 @@ test('ObservableArray<T>.splice() deleteCount, items', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args1 = NotifyCollectionChangedEventArgs.Empty;
-  let args2 = NotifyCollectionChangedEventArgs.Empty;
+  let args1 = NotifyCollectionChangedEventArgs.empty;
+  let args2 = NotifyCollectionChangedEventArgs.empty;
 
   oc.CollectionChanged.on((_, e) => {
     ++count;

@@ -35,7 +35,7 @@ test('Basic', () => {
   expect(model.valueB).toBe('C');
 });
 
-test('Empty', () => {
+test('empty', () => {
   const history = new History();
 
   expect(history.canUndo).toBeFalsy();
