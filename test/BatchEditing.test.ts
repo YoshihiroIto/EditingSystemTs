@@ -94,6 +94,52 @@ test('NestingBatch', () => {
   expect(model.valueB).toBe('C');
 });
 
+test('Cannot call undo during batch recording', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
+
+  model.valueA = 999;
+  model.valueB = 'XYZ';
+
+  history.beginBatch();
+
+  expect(() => history.undo()).toThrow();
+});
+
+test('Cannot call redo during batch recording', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
+
+  model.valueA = 999;
+  model.valueB = 'XYZ';
+
+  history.beginBatch();
+
+  expect(() => history.redo()).toThrow();
+});
+
+test('Batch recording has not begun ', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
+
+  model.valueA = 999;
+  model.valueB = 'XYZ';
+
+  expect(() => history.endBatch()).toThrow();
+});
+
 class TestModel implements NotifyPropertyChanged {
   readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
