@@ -265,36 +265,14 @@ test('ObservableCollection<T>.splice() deleteCount, items', () => {
   oc.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
   let count = 0;
-  let args1 = NotifyCollectionChangedEventArgs.Empty;
-  let args2 = NotifyCollectionChangedEventArgs.Empty;
 
-  oc.CollectionChanged.on((_, e) => {
+  oc.CollectionChanged.on(() => {
     ++count;
-
-    if (count === 1) {
-      args1 = e;
-    }
-
-    if (count === 2) {
-      args2 = e;
-    }
   });
 
   oc.splice(3, 3, 'A', 'B', 'C');
 
-  expect(count).toBe(2);
-
-  expect(args1.action).toBe(NotifyCollectionChangedActions.Remove);
-  expect(args1.newItems).toBeNull();
-  expect(args1.oldItems?.length).toBe(3);
-  expect(args1.newStartingIndex).toBe(-1);
-  expect(args1.oldStartingIndex).toBe(3);
-
-  expect(args2.action).toBe(NotifyCollectionChangedActions.Add);
-  expect(args2.newItems?.length).toBe(3);
-  expect(args2.oldItems).toBeNull();
-  expect(args2.newStartingIndex).toBe(3);
-  expect(args2.oldStartingIndex).toBe(-1);
+  expect(count).toBe(4);
 
   expect(oc.length).toBe(10);
 

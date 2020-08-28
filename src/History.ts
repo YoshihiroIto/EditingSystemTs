@@ -234,6 +234,18 @@ export class History {
             }
             break;
 
+          case NotifyCollectionChangedActions.BeginBatch:
+            {
+              this.beginBatch();
+            }
+            break;
+
+          case NotifyCollectionChangedActions.EndBatch:
+            {
+              this.endBatch();
+            }
+            break;
+
           default:
             throw new Error(`Not implement: ${e.action}`);
         }

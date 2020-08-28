@@ -21,6 +21,9 @@ export const NotifyCollectionChangedActions = {
   Remove: 'Remove',
   Replace: 'Replace',
   Reset: 'Reset',
+  //
+  BeginBatch: 'BeginBatch',
+  EndBatch: 'EndBatch',
 } as const;
 
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];

@@ -101,6 +101,15 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
 
     const r = super.splice(start, deleteCount, ...items);
 
+    const isBatch = deleteCount > 0 && items.length > 0;
+
+    if (isBatch) {
+      this._CollectionChanged?.emit(
+        this,
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.BeginBatch, null, null, -1, -1)
+      );
+    }
+
     if (deleteCount > 0) {
       this._CollectionChanged?.emit(
         this,
@@ -112,6 +121,13 @@ export class ObservableCollection<T> extends Array<T> implements NotifyCollectio
       this._CollectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, start, -1)
+      );
+    }
+
+    if (isBatch) {
+      this._CollectionChanged?.emit(
+        this,
+        new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.EndBatch, null, null, -1, -1)
       );
     }
 
