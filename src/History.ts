@@ -17,6 +17,10 @@ export class History {
     return this.canUndo || this.canRedo;
   }
 
+  get undoRedoCount(): [number, number] {
+    return [this.undoStack.length, this.redoStack.length];
+  }
+
   private readonly undoStack = new Array<HistoryAction>();
   private readonly redoStack = new Array<HistoryAction>();
 
