@@ -5,59 +5,59 @@ import { NotifyPropertyChanged, PropertyChangedEventArgs } from '../src/Event';
 test('Initial', () => {
   const history = new History();
 
-  expect(history.CanUndo).toBeFalsy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeFalsy();
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
 });
 
 test('Simple', () => {
   const history = new History();
   const model = new TestModel(history);
 
-  expect(history.CanUndo).toBeFalsy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeFalsy();
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
 
   model.valueA = 1;
   expect(model.valueA).toBe(1);
-  expect(history.CanUndo).toBeTruthy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeTruthy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeTruthy();
 
   model.valueA = 2;
   expect(model.valueA).toBe(2);
-  expect(history.CanUndo).toBeTruthy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeTruthy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeTruthy();
 
   history.undo();
   expect(model.valueA).toBe(1);
-  expect(history.CanUndo).toBeTruthy();
-  expect(history.CanRedo).toBeTruthy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeTruthy();
+  expect(history.canRedo).toBeTruthy();
+  expect(history.canClear).toBeTruthy();
 
   history.undo();
   expect(model.valueA).toBe(0);
-  expect(history.CanUndo).toBeFalsy();
-  expect(history.CanRedo).toBeTruthy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeTruthy();
+  expect(history.canClear).toBeTruthy();
 
   history.redo();
   expect(model.valueA).toBe(1);
-  expect(history.CanUndo).toBeTruthy();
-  expect(history.CanRedo).toBeTruthy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeTruthy();
+  expect(history.canRedo).toBeTruthy();
+  expect(history.canClear).toBeTruthy();
 
   history.redo();
   expect(model.valueA).toBe(2);
-  expect(history.CanUndo).toBeTruthy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeTruthy();
+  expect(history.canUndo).toBeTruthy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeTruthy();
 
   history.clear();
-  expect(history.CanUndo).toBeFalsy();
-  expect(history.CanRedo).toBeFalsy();
-  expect(history.CanClear).toBeFalsy();
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
 });
 
 test('PropertyChanged', () => {

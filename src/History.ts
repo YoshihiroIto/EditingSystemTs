@@ -2,14 +2,14 @@ import { NotifyPropertyChanged, PropertyChangedEventArgs, NotifyCollectionChange
 import { ObservableCollection } from './ObservableCollection';
 
 export class History {
-  get CanUndo(): boolean {
+  get canUndo(): boolean {
     return this.undoStack.length > 0;
   }
-  get CanRedo(): boolean {
+  get canRedo(): boolean {
     return this.redoStack.length > 0;
   }
-  get CanClear(): boolean {
-    return this.CanUndo || this.CanRedo;
+  get canClear(): boolean {
+    return this.canUndo || this.canRedo;
   }
 
   private readonly undoStack = new Array<HistoryAction>();
@@ -18,10 +18,14 @@ export class History {
   private isInUndoing = false;
 
   undo(): void {
-    if (this.CanUndo == false) return;
+    if (this.canUndo == false) {
+      return;
+    }
 
     const action = this.undoStack.pop();
-    if (action == null) throw new Error();
+    if (action == null) {
+      throw new Error();
+    }
 
     this.isInUndoing = true;
     action.Undo();
@@ -31,10 +35,14 @@ export class History {
   }
 
   redo(): void {
-    if (this.CanRedo == false) return;
+    if (this.canRedo == false) {
+      return;
+    }
 
     const action = this.redoStack.pop();
-    if (action == null) throw new Error();
+    if (action == null) {
+      throw new Error();
+    }
 
     this.isInUndoing = true;
     action.Redo();
@@ -43,7 +51,65 @@ export class History {
     this.undoStack.push(action);
   }
 
+  private batchDepth = 0;
+  private batchHistory: BatchHistory | null = null;
+  private get isInBatch(): boolean {
+    return this.batchDepth > 0;
+  }
+
+  beginBatch(): void {
+    ++this.batchDepth;
+
+    if (this.batchDepth == 1) {
+      this.beginBatchInternal();
+    }
+  }
+
+  endBatch(): void {
+    if (this.batchDepth == 0) throw new Error('Batch recording has not begun.');
+
+    --this.batchDepth;
+
+    if (this.batchDepth == 0) {
+      this.endBatchInternal();
+    }
+  }
+
+  beginBatchInternal(): void {
+    if (this.batchHistory != null) {
+      throw new Error();
+    }
+
+    this.batchHistory = new BatchHistory();
+  }
+
+  endBatchInternal(): void {
+    if (this.batchHistory == null) {
+      throw new Error();
+    }
+
+    if (this.batchHistory.canUndo || this.batchHistory.canRedo) {
+      const thisBatchHistory = this.batchHistory;
+
+      this.push(
+        () => thisBatchHistory.UndoAll(),
+        () => thisBatchHistory.RedoAll()
+      );
+    }
+
+    this.batchHistory = null;
+  }
+
   push(undo: UndoFunction, redo: RedoFunction): void {
+    if (this.isInBatch) {
+      if (this.batchHistory == null) {
+        throw new Error();
+      }
+
+      this.batchHistory.push(undo, redo);
+      return;
+    }
+
     this.undoStack.push(new HistoryAction(undo, redo));
   }
 
@@ -196,4 +262,22 @@ interface UndoFunction extends Function {
 
 interface RedoFunction extends Function {
   (): void;
+}
+
+class BatchHistory extends History {
+  constructor() {
+    super();
+  }
+
+  UndoAll(): void {
+    while (this.canUndo) {
+      this.undo();
+    }
+  }
+
+  RedoAll(): void {
+    while (this.canRedo) {
+      this.redo();
+    }
+  }
 }
