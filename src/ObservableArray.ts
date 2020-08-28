@@ -3,7 +3,7 @@ import { NotifyCollectionChangedEventArgs, NotifyCollectionChangedActions } from
 
 export class ObservableArray<T> extends Array<T> {
   get CollectionChanged(): TypedEvent<NotifyCollectionChangedEventArgs> {
-    this._CollectionChanged ||= new TypedEvent<NotifyCollectionChangedEventArgs>();
+    this._CollectionChanged ??= new TypedEvent<NotifyCollectionChangedEventArgs>();
 
     return this._CollectionChanged;
   }
