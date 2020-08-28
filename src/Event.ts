@@ -10,10 +10,6 @@ export class PropertyChangedEventArgs extends EventArgs {
   }
 }
 
-export interface NotifyCollectionChanged {
-  readonly CollectionChanged: TypedEvent<NotifyCollectionChangedEventArgs>;
-}
-
 export const NotifyCollectionChangedActions = {
   Unset: 'Unset',
   Add: 'Add',
