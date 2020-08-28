@@ -1,4 +1,5 @@
 import { TypedEvent } from './TypedEvent';
+
 import { NotifyCollectionChangedEventArgs, NotifyCollectionChangedActions } from './Event';
 
 export class ObservableArray<T> extends Array<T> {
@@ -68,6 +69,7 @@ export class ObservableArray<T> extends Array<T> {
 
   sort(compareFn?: (a: T, b: T) => number): this {
     const old = Array.from(this);
+
     const r = super.sort(compareFn);
 
     if (r != undefined) {
@@ -82,6 +84,7 @@ export class ObservableArray<T> extends Array<T> {
 
   reverse(): T[] {
     const old = Array.from(this);
+
     const r = super.reverse();
 
     if (r != undefined) {
