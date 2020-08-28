@@ -323,13 +323,7 @@ export class History {
 }
 
 class HistoryAction {
-  public readonly undo: UndoFunction;
-  public readonly redo: RedoFunction;
-
-  constructor(undo: UndoFunction, redo: RedoFunction) {
-    this.undo = undo;
-    this.redo = redo;
-  }
+  constructor(readonly undo: UndoFunction, readonly redo: RedoFunction) {}
 }
 
 interface UndoFunction extends Function {
