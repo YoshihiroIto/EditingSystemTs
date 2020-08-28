@@ -23,6 +23,14 @@ export class History {
   private isInUndoing = false;
 
   undo(): void {
+    if (this.isInBatch) {
+      throw new Error("Can't call undo() during batch recording.");
+    }
+
+    if (this.isInPaused) {
+      throw new Error("Can't call undo() during in paused.");
+    }
+
     if (this.canUndo == false) {
       return;
     }
@@ -43,6 +51,14 @@ export class History {
   }
 
   redo(): void {
+    if (this.isInBatch) {
+      throw new Error("Can't call undo() during batch recording.");
+    }
+
+    if (this.isInPaused) {
+      throw new Error("Can't call undo() during in paused.");
+    }
+
     if (this.canRedo == false) {
       return;
     }
@@ -113,7 +129,28 @@ export class History {
     this.batchHistory = null;
   }
 
+  private pauseDepth = 0;
+  private get isInPaused(): boolean {
+    return this.pauseDepth > 0;
+  }
+
+  beginPause(): void {
+    ++this.pauseDepth;
+  }
+
+  endPause(): void {
+    if (this.pauseDepth == 0) {
+      throw new Error('Pause is not begun.');
+    }
+
+    --this.pauseDepth;
+  }
+
   push(undo: UndoFunction, redo: RedoFunction): void {
+    if (this.isInPaused) {
+      return;
+    }
+
     if (this.isInBatch) {
       if (this.batchHistory == null) {
         throw new Error();
