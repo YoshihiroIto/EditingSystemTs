@@ -21,7 +21,9 @@ export class TypedEvent<T = EventArgs> {
 
   off(listener: Listener<T>): void {
     const callbackIndex = this.listeners.indexOf(listener);
-    if (callbackIndex > -1) this.listeners.splice(callbackIndex, 1);
+    if (callbackIndex > -1) {
+      this.listeners.splice(callbackIndex, 1);
+    }
   }
 
   emit(sender: unknown, event: T): void {
