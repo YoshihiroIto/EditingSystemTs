@@ -192,61 +192,52 @@ export class History {
         desc.value.CollectionChanged.on(onCollectionChanged);
       }
 
-      // パッキングプロパティを作る
-      const packingName = `_${propertyName}`;
-
-      Object.defineProperty(model, packingName, {
-        value: desc.value,
-      });
-
-      const packingDesc = Object.getOwnPropertyDescriptor(model, packingName);
-      if (packingDesc == null) {
-        continue;
-      }
+      // 保存領域を作る
+      let packing = desc.value;
 
       // 元のプロパティのセッター、ゲッターを作る
       Object.defineProperty(model, propertyName, {
-        get: () => packingDesc.value,
+        get: () => packing,
         set: value => {
-          const oldValue = packingDesc.value;
+          const oldValue = packing;
 
           this.push(
             () => {
-              if (packingDesc.value instanceof ObservableArray) {
-                packingDesc.value.CollectionChanged.off(onCollectionChanged);
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.off(onCollectionChanged);
               }
 
-              packingDesc.value = oldValue;
+              packing = oldValue;
 
-              if (packingDesc.value instanceof ObservableArray) {
-                packingDesc.value.CollectionChanged.on(onCollectionChanged);
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.on(onCollectionChanged);
               }
 
               this.raisePropertyChanged(model, propertyName);
             },
             () => {
-              if (packingDesc.value instanceof ObservableArray) {
-                packingDesc.value.CollectionChanged.off(onCollectionChanged);
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.off(onCollectionChanged);
               }
 
-              packingDesc.value = value;
+              packing = value;
 
-              if (packingDesc.value instanceof ObservableArray) {
-                packingDesc.value.CollectionChanged.on(onCollectionChanged);
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.on(onCollectionChanged);
               }
 
               this.raisePropertyChanged(model, propertyName);
             }
           );
 
-          if (packingDesc.value instanceof ObservableArray) {
-            packingDesc.value.CollectionChanged.off(onCollectionChanged);
+          if (packing instanceof ObservableArray) {
+            packing.CollectionChanged.off(onCollectionChanged);
           }
 
-          packingDesc.value = value;
+          packing = value;
 
-          if (packingDesc.value instanceof ObservableArray) {
-            packingDesc.value.CollectionChanged.on(onCollectionChanged);
+          if (packing instanceof ObservableArray) {
+            packing.CollectionChanged.on(onCollectionChanged);
           }
 
           this.raisePropertyChanged(model, propertyName);
