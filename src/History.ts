@@ -184,10 +184,6 @@ export class History {
         return;
       }
 
-      if (sender instanceof ObservableCollection == false) {
-        throw new Error();
-      }
-
       if (sender instanceof ObservableCollection) {
         switch (e.action) {
           case NotifyCollectionChangedActions.Add:
@@ -241,6 +237,8 @@ export class History {
           default:
             throw new Error(`Not implement: ${e.action}`);
         }
+      } else {
+        throw new Error();
       }
     });
   }
