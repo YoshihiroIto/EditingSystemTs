@@ -27,9 +27,12 @@ export class History {
       throw new Error();
     }
 
-    this.isInUndoing = true;
-    action.Undo();
-    this.isInUndoing = false;
+    try {
+      this.isInUndoing = true;
+      action.Undo();
+    } finally {
+      this.isInUndoing = false;
+    }
 
     this.redoStack.push(action);
   }
@@ -44,9 +47,12 @@ export class History {
       throw new Error();
     }
 
-    this.isInUndoing = true;
-    action.Redo();
-    this.isInUndoing = false;
+    try {
+      this.isInUndoing = true;
+      action.Redo();
+    } finally {
+      this.isInUndoing = false;
+    }
 
     this.undoStack.push(action);
   }
