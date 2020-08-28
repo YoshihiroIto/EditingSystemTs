@@ -1,10 +1,5 @@
-import {
-  NotifyPropertyChanged,
-  PropertyChangedEventArgs,
-  NotifyCollectionChangedActions,
-  NotifyCollectionChangedEventArgs,
-} from './Event';
-import { ObservableArray } from './ObservableArray';
+import {NotifyCollectionChangedActions, NotifyCollectionChangedEventArgs, NotifyPropertyChanged, PropertyChangedEventArgs,} from './Event';
+import {ObservableArray} from './ObservableArray';
 
 export class History {
   get canUndo(): boolean {
@@ -35,7 +30,7 @@ export class History {
       throw new Error("Can't call undo() during in paused.");
     }
 
-    if (this.canUndo == false) {
+    if (!this.canUndo) {
       return;
     }
 
@@ -63,7 +58,7 @@ export class History {
       throw new Error("Can't call undo() during in paused.");
     }
 
-    if (this.canRedo == false) {
+    if (!this.canRedo) {
       return;
     }
 
@@ -292,7 +287,7 @@ export class History {
 
         case NotifyCollectionChangedActions.Reset:
           {
-            const redo = () => {
+            const undoOrRedo = () => {
               const oldItems = e.oldItems;
               if (oldItems == null) {
                 throw new Error();
@@ -303,9 +298,7 @@ export class History {
               sender.push(...oldItems);
               e.setOldItemsInternal(old);
             };
-            const undo = redo;
-
-            this.push(undo, redo);
+            this.push(undoOrRedo, undoOrRedo);
           }
           break;
 

@@ -56,8 +56,8 @@ export class NotifyCollectionChangedEventArgs extends EventArgs {
     this._oldItems = items;
   }
 
-  private _isBeginBatch = false;
-  private _isEndBatch = false;
+  private readonly _isBeginBatch;
+  private readonly _isEndBatch;
 
   constructor(
     private _action: NotifyCollectionChangedAction,
