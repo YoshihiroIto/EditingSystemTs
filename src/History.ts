@@ -5,6 +5,7 @@ import {
   PropertyChangedEventArgs,
 } from './Event';
 import { ObservableArray } from './ObservableArray';
+import { Assert } from './Assert';
 
 export class History {
   get canUndo(): boolean {
@@ -40,9 +41,7 @@ export class History {
     }
 
     const action = this.undoStack.pop();
-    if (action == null) {
-      throw new Error();
-    }
+    Assert.isNotNull(action);
 
     try {
       this.isInUndoing = true;
@@ -68,9 +67,7 @@ export class History {
     }
 
     const action = this.redoStack.pop();
-    if (action == null) {
-      throw new Error();
-    }
+    Assert.isNotNull(action);
 
     try {
       this.isInUndoing = true;
@@ -109,17 +106,13 @@ export class History {
   }
 
   beginBatchInternal(): void {
-    if (this.batchHistory != null) {
-      throw new Error();
-    }
+    Assert.isNull(this.batchHistory);
 
     this.batchHistory = new BatchHistory();
   }
 
   endBatchInternal(): void {
-    if (this.batchHistory == null) {
-      throw new Error();
-    }
+    Assert.isNotNull(this.batchHistory);
 
     if (this.batchHistory.canUndo || this.batchHistory.canRedo) {
       const thisBatchHistory = this.batchHistory;
@@ -156,9 +149,7 @@ export class History {
     }
 
     if (this.isInBatch) {
-      if (this.batchHistory == null) {
-        throw new Error();
-      }
+      Assert.isNotNull(this.batchHistory);
 
       this.batchHistory.push(undo, redo);
     } else {
@@ -264,9 +255,7 @@ export class History {
         case NotifyCollectionChangedActions.Add:
           {
             const addItems = e.newItems;
-            if (addItems == null) {
-              throw new Error();
-            }
+            Assert.isNotNull(addItems);
 
             const undo = () => sender.splice(e.newStartingIndex, addItems.length);
             const redo = () => sender.splice(e.newStartingIndex, 0, ...addItems);
@@ -279,9 +268,7 @@ export class History {
         case NotifyCollectionChangedActions.Remove:
           {
             const oldItems = e.oldItems;
-            if (oldItems == null) {
-              throw new Error();
-            }
+            Assert.isNotNull(oldItems);
 
             const undo = () => sender.splice(e.oldStartingIndex, 0, ...oldItems);
             const redo = () => sender.splice(e.oldStartingIndex, oldItems.length);
@@ -294,9 +281,7 @@ export class History {
           {
             const undoOrRedo = () => {
               const oldItems = e.oldItems;
-              if (oldItems == null) {
-                throw new Error();
-              }
+              Assert.isNotNull(oldItems);
 
               const old = ObservableArray.from(sender);
               sender.splice(0);
