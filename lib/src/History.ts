@@ -6,6 +6,7 @@ import {
 } from './Event';
 import { ObservableArray } from './ObservableArray';
 import { Assert } from './Assert';
+import { EditingSystem } from './Decorators';
 
 export class History {
   get canUndo(): boolean {
@@ -162,19 +163,32 @@ export class History {
     this.redoStack.splice(0, this.redoStack.length);
   }
 
-  register(model: NotifyPropertyChanged): void {
-    const propertyNames = Object.getOwnPropertyNames(model);
+  register(target: NotifyPropertyChanged): void {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const t = target as any;
+    const ignoreUndoProperties = t[EditingSystem.ignoreName] as Set<string>;
+    if (ignoreUndoProperties != null) {
+      delete t[EditingSystem.ignoreName];
+    }
 
     const onCollectionChanged = (sender: unknown, e: NotifyCollectionChangedEventArgs) =>
       this.OnCollectionChanged(sender, e);
 
+    const propertyNames = Object.getOwnPropertyNames(target);
     for (const propertyName of propertyNames) {
       // 管理外プロパティをはじく
       if (propertyName === 'PropertyChanged') {
         continue;
       }
 
-      const desc = Object.getOwnPropertyDescriptor(model, propertyName);
+      // 無視プロパティをはじく
+      if (ignoreUndoProperties != null) {
+        if (ignoreUndoProperties.has(propertyName)) {
+          continue;
+        }
+      }
+
+      const desc = Object.getOwnPropertyDescriptor(target, propertyName);
       if (desc == null) {
         continue;
       }
@@ -188,7 +202,7 @@ export class History {
       let isInDoing = false;
 
       // 元のプロパティのセッター、ゲッターを作る
-      Object.defineProperty(model, propertyName, {
+      Object.defineProperty(target, propertyName, {
         get: () => packing,
         set: value => {
           if (isInDoing) {
@@ -205,7 +219,7 @@ export class History {
                 packing.CollectionChanged.off(onCollectionChanged);
               }
 
-              const d = Object.getOwnPropertyDescriptor(model, propertyName);
+              const d = Object.getOwnPropertyDescriptor(target, propertyName);
               if (d?.set != null) {
                 d.set(v);
               }
@@ -216,7 +230,7 @@ export class History {
                 packing.CollectionChanged.on(onCollectionChanged);
               }
 
-              this.raisePropertyChanged(model, propertyName);
+              this.raisePropertyChanged(target, propertyName);
             } finally {
               isInDoing = false;
             }
