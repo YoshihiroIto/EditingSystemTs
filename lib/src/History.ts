@@ -185,39 +185,68 @@ export class History {
 
       // 保存領域を作る
       let packing = desc.value;
+      let isInDoing = false;
 
       // 元のプロパティのセッター、ゲッターを作る
       Object.defineProperty(model, propertyName, {
         get: () => packing,
         set: value => {
+          if (isInDoing) {
+            return;
+          }
+
           const oldValue = packing;
 
           this.push(
             () => {
-              if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.off(onCollectionChanged);
+              try {
+                isInDoing = true;
+
+                if (packing instanceof ObservableArray) {
+                  packing.CollectionChanged.off(onCollectionChanged);
+                }
+
+                const d = Object.getOwnPropertyDescriptor(model, propertyName);
+                if (d?.set != null) {
+                  d.set(oldValue);
+                }
+
+                packing = oldValue;
+
+                if (packing instanceof ObservableArray) {
+                  packing.CollectionChanged.on(onCollectionChanged);
+                }
+
+                this.raisePropertyChanged(model, propertyName);
+
+                isInDoing = false;
+              } finally {
+                isInDoing = false;
               }
-
-              packing = oldValue;
-
-              if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.on(onCollectionChanged);
-              }
-
-              this.raisePropertyChanged(model, propertyName);
             },
             () => {
-              if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.off(onCollectionChanged);
+              try {
+                isInDoing = true;
+
+                if (packing instanceof ObservableArray) {
+                  packing.CollectionChanged.off(onCollectionChanged);
+                }
+
+                const d = Object.getOwnPropertyDescriptor(model, propertyName);
+                if (d?.set != null) {
+                  d.set(value);
+                }
+
+                packing = value;
+
+                if (packing instanceof ObservableArray) {
+                  packing.CollectionChanged.on(onCollectionChanged);
+                }
+
+                this.raisePropertyChanged(model, propertyName);
+              } finally {
+                isInDoing = false;
               }
-
-              packing = value;
-
-              if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.on(onCollectionChanged);
-              }
-
-              this.raisePropertyChanged(model, propertyName);
             }
           );
 
