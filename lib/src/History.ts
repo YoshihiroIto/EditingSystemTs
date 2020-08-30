@@ -197,70 +197,39 @@ export class History {
 
           const oldValue = packing;
 
-          this.push(
-            () => {
-              try {
-                isInDoing = true;
+          const doProc = (v: unknown) => {
+            try {
+              isInDoing = true;
 
-                if (packing instanceof ObservableArray) {
-                  packing.CollectionChanged.off(onCollectionChanged);
-                }
-
-                const d = Object.getOwnPropertyDescriptor(model, propertyName);
-                if (d?.set != null) {
-                  d.set(oldValue);
-                }
-
-                packing = oldValue;
-
-                if (packing instanceof ObservableArray) {
-                  packing.CollectionChanged.on(onCollectionChanged);
-                }
-
-                this.raisePropertyChanged(model, propertyName);
-
-                isInDoing = false;
-              } finally {
-                isInDoing = false;
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.off(onCollectionChanged);
               }
-            },
-            () => {
-              try {
-                isInDoing = true;
 
-                if (packing instanceof ObservableArray) {
-                  packing.CollectionChanged.off(onCollectionChanged);
-                }
-
-                const d = Object.getOwnPropertyDescriptor(model, propertyName);
-                if (d?.set != null) {
-                  d.set(value);
-                }
-
-                packing = value;
-
-                if (packing instanceof ObservableArray) {
-                  packing.CollectionChanged.on(onCollectionChanged);
-                }
-
-                this.raisePropertyChanged(model, propertyName);
-              } finally {
-                isInDoing = false;
+              const d = Object.getOwnPropertyDescriptor(model, propertyName);
+              if (d?.set != null) {
+                d.set(v);
               }
+
+              packing = v;
+
+              if (packing instanceof ObservableArray) {
+                packing.CollectionChanged.on(onCollectionChanged);
+              }
+
+              this.raisePropertyChanged(model, propertyName);
+
+              isInDoing = false;
+            } finally {
+              isInDoing = false;
             }
+          };
+
+          this.push(
+            () => doProc(oldValue),
+            () => doProc(value)
           );
 
-          if (packing instanceof ObservableArray) {
-            packing.CollectionChanged.off(onCollectionChanged);
-          }
-
-          packing = value;
-
-          if (packing instanceof ObservableArray) {
-            packing.CollectionChanged.on(onCollectionChanged);
-          }
-
-          this.raisePropertyChanged(model, propertyName);
+          doProc(value);
         },
       });
     }
