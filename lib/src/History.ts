@@ -275,7 +275,7 @@ export class History {
 
         case NotifyCollectionChangedActions.Reset:
           {
-            const undoOrRedo = () => {
+            const doProc = () => {
               const oldItems = e.oldItems;
               Assert.isNotNull(oldItems);
 
@@ -284,7 +284,7 @@ export class History {
               sender.push(...oldItems);
               e.setOldItemsInternal(old);
             };
-            this.push(undoOrRedo, undoOrRedo);
+            this.push(doProc, doProc);
           }
           break;
 
