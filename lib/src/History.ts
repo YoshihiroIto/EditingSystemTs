@@ -217,8 +217,6 @@ export class History {
               }
 
               this.raisePropertyChanged(model, propertyName);
-
-              isInDoing = false;
             } finally {
               isInDoing = false;
             }
