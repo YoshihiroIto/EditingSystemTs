@@ -10,6 +10,8 @@
 
     <button @click="inc">inc</button>
     <button @click="dec">dec</button>
+
+    <input type="text" />
   </div>
 </template>
 
@@ -17,6 +19,7 @@
 import { defineComponent, ref } from '@vue/composition-api';
 import { TestModel } from './models/TestModel';
 import { History } from '../../lib/src/History';
+import hotkeys from 'hotkeys-js';
 
 export default defineComponent({
   name: "App",
@@ -35,6 +38,28 @@ export default defineComponent({
     const inc = () => ++ _testModel.valueA;
     const dec = () => -- _testModel.valueA;
 
+    // https://qiita.com/SotaSuzuki/items/1e060f0db0c61ec4f9d5
+    const keyMaps = [
+      {
+        sequence: 'ctrl+z',
+        handler: () => _history.undo()
+      },
+      {
+        sequence: 'ctrl+y',
+        handler: () => _history.redo()
+      },
+    ];
+    
+    const sequences = keyMaps.map(keyMap => keyMap.sequence)
+    
+    hotkeys(sequences.join(','), (keyboard, hotkey) => {
+      const keyMap = keyMaps.find(({ sequence }) => sequence === hotkey.key);
+      if (!keyMap){
+       return;
+      }
+      keyMap.handler();
+    });
+
     return {
       history,
       testModel,
@@ -43,7 +68,7 @@ export default defineComponent({
       undo,
       redo,
       inc,
-      dec
+      dec,
     };
   }
 });

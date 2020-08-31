@@ -8,3 +8,15 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
 }).$mount('#app')
+
+
+document.body.onkeydown = function(e:KeyboardEvent) {
+
+  if (e.ctrlKey && e.key.toLowerCase() == "z" || 
+      e.ctrlKey && e.key.toLowerCase() == "y"){
+      e.preventDefault();
+      return false;
+    }
+
+    return true;
+}
