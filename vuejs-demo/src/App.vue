@@ -41,7 +41,6 @@ export default defineComponent({
     const history = ref(_history);
     const testModel = ref(_testModel);
     const valueA = ref(_testModel.valueA);
-    const valueNumber = ref(_testModel.valueNumber);
 
     const undo = () => _history.undo();
     const redo = () => _history.redo();
@@ -62,7 +61,7 @@ export default defineComponent({
         handler: () => _history.redo()
       },
     ];
-    
+
     const sequences = keyMaps.map(keyMap => keyMap.sequence)
     
     hotkeys(sequences.join(','), (keyboard, hotkey) => {
@@ -80,7 +79,6 @@ export default defineComponent({
       history,
       testModel,
       valueA,
-      valueNumber,
 
       undo,
       redo,
