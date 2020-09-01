@@ -11,7 +11,13 @@
     <button @click="inc">inc</button>
     <button @click="dec">dec</button>
 
-    <input type="text" />
+    <br/>
+    <br/>
+
+    <NumberEditor @begin-continuous-editing="onBeginContinuousEditing"
+                  @end-continuous-editing="onEndContinuousEditing"
+                  :value.sync="testModel.valueA" />
+    {{testModel.valueA}}
   </div>
 </template>
 
@@ -21,9 +27,12 @@ import { TestModel } from './models/TestModel';
 import { History } from '../../lib/src/History';
 import hotkeys from 'hotkeys-js';
 
+import NumberEditor from './components/NumberEditor.vue';
+
 export default defineComponent({
   name: "App",
   components: {
+    NumberEditor,
   },
   setup() {
     const _history = new History();
@@ -32,11 +41,15 @@ export default defineComponent({
     const history = ref(_history);
     const testModel = ref(_testModel);
     const valueA = ref(_testModel.valueA);
+    const valueNumber = ref(_testModel.valueNumber);
 
     const undo = () => _history.undo();
     const redo = () => _history.redo();
     const inc = () => ++ _testModel.valueA;
     const dec = () => -- _testModel.valueA;
+
+    const onBeginContinuousEditing = () => _history.beginBatch();
+    const onEndContinuousEditing = () => _history.endBatch();
 
     // https://qiita.com/SotaSuzuki/items/1e060f0db0c61ec4f9d5
     const keyMaps = [
@@ -57,6 +70,9 @@ export default defineComponent({
       if (!keyMap){
        return;
       }
+
+      //console.log("hotkey");
+
       keyMap.handler();
     });
 
@@ -64,11 +80,15 @@ export default defineComponent({
       history,
       testModel,
       valueA,
+      valueNumber,
 
       undo,
       redo,
       inc,
       dec,
+
+      onBeginContinuousEditing,
+      onEndContinuousEditing
     };
   }
 });
