@@ -82,7 +82,7 @@ export class History {
 
   private batchDepth = 0;
   private batchHistory: BatchHistory | null = null;
-  private get isInBatch(): boolean {
+  public get isInBatch(): boolean {
     return this.batchDepth > 0;
   }
 
