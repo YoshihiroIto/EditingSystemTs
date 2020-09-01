@@ -46,8 +46,17 @@ export default defineComponent({
     const inc = () => ++ _testModel.valueA;
     const dec = () => -- _testModel.valueA;
 
-    const onBeginContinuousEditing = () => _history.beginBatch();
-    const onEndContinuousEditing = () => _history.endBatch();
+    const onBeginContinuousEditing = () =>{
+      if (_history.isInBatch == false){
+        _history.beginBatch();
+      }
+
+    };
+    const onEndContinuousEditing = () =>{
+      if (_history.isInBatch){
+        _history.endBatch();
+      }
+    }
 
     document.body.onkeydown = (e: KeyboardEvent) => {
       if (e.ctrlKey) {

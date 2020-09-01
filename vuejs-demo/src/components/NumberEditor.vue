@@ -2,6 +2,10 @@
     <div>
         <input type="number"
                :value="value"
+               @mousedown="textMouseDown"
+               @mouseup="textMouseUp"
+               @keydown="textKeyDown"
+               @keyup="textKeyUp"
                @input="$emit('update:value', parseInt($event.target.value))"
          />
 
@@ -26,20 +30,40 @@ type Props = {
 
 export default defineComponent({
   props: {
-    value: {type:Number, default: 0},
-  },
-  components: {
+    value: {type: Number, default: 0},
   },
   setup(props: Props, context: SetupContext) {
 
-    console.log(props);
+    const emitBeginContinuousEditing = () => context.emit("begin-continuous-editing");
+    const emitEndContinuousEditing = () => context.emit("end-continuous-editing");
 
-    const sliderMouseDown = () => context.emit("begin-continuous-editing");
-    const sliderMouseUp = () => context.emit("end-continuous-editing");
+    const sliderMouseDown = emitBeginContinuousEditing;
+    const sliderMouseUp   = emitEndContinuousEditing;
+    const textMouseDown   = emitBeginContinuousEditing;
+    const textMouseUp     = emitEndContinuousEditing;
+
+    const textKeyDown = (e:KeyboardEvent) => {
+      if (e.repeat == false) {
+        if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+          emitBeginContinuousEditing();
+        }
+      }
+    };
+
+    const textKeyUp = (e:KeyboardEvent) => {
+      if (e.key == "ArrowUp" || e.key == "ArrowDown") {
+        emitEndContinuousEditing();
+      }
+    };
 
     return {
         sliderMouseDown,
-        sliderMouseUp
+        sliderMouseUp,
+        //
+        textMouseDown,
+        textMouseUp,
+        textKeyDown,
+        textKeyUp,
     };
   }
 });
