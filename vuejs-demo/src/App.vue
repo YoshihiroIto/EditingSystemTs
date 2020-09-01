@@ -25,7 +25,6 @@
 import { defineComponent, ref } from '@vue/composition-api';
 import { TestModel } from './models/TestModel';
 import { History } from '../../lib/src/History';
-import hotkeys from 'hotkeys-js';
 
 import NumberEditor from './components/NumberEditor.vue';
 
@@ -50,30 +49,22 @@ export default defineComponent({
     const onBeginContinuousEditing = () => _history.beginBatch();
     const onEndContinuousEditing = () => _history.endBatch();
 
-    // https://qiita.com/SotaSuzuki/items/1e060f0db0c61ec4f9d5
-    const keyMaps = [
-      {
-        sequence: 'ctrl+z',
-        handler: () => _history.undo()
-      },
-      {
-        sequence: 'ctrl+y',
-        handler: () => _history.redo()
-      },
-    ];
+    document.body.onkeydown = (e: KeyboardEvent) => {
+      if (e.ctrlKey) {
+        switch(e.key)
+        {
+          case "z":
+            e.preventDefault();
+            _history.undo();
+            break;
 
-    const sequences = keyMaps.map(keyMap => keyMap.sequence)
-    
-    hotkeys(sequences.join(','), (keyboard, hotkey) => {
-      const keyMap = keyMaps.find(({ sequence }) => sequence === hotkey.key);
-      if (!keyMap){
-       return;
+          case "y":
+            e.preventDefault();
+            _history.redo();
+            break;
+        }
       }
-
-      //console.log("hotkey");
-
-      keyMap.handler();
-    });
+    };
 
     return {
       history,
