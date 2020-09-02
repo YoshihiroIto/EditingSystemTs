@@ -194,7 +194,7 @@ export class History {
       }
 
       if (desc.value instanceof ObservableArray) {
-        desc.value.CollectionChanged.on(onCollectionChanged);
+        desc.value.collectionChanged.on(onCollectionChanged);
       }
 
       // 保存領域を作る
@@ -216,7 +216,7 @@ export class History {
               isInDoing = true;
 
               if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.off(onCollectionChanged);
+                packing.collectionChanged.off(onCollectionChanged);
               }
 
               const d = Object.getOwnPropertyDescriptor(target, propertyName);
@@ -227,7 +227,7 @@ export class History {
               packing = v;
 
               if (packing instanceof ObservableArray) {
-                packing.CollectionChanged.on(onCollectionChanged);
+                packing.collectionChanged.on(onCollectionChanged);
               }
 
               this.raisePropertyChanged(target, propertyName);
@@ -248,7 +248,7 @@ export class History {
   }
 
   private raisePropertyChanged(model: NotifyPropertyChanged, propertyName: string) {
-    model.PropertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
+    model.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
   }
 
   private OnCollectionChanged(sender: unknown, e: NotifyCollectionChangedEventArgs): void {

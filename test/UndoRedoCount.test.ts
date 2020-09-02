@@ -38,7 +38,7 @@ test('Basic', () => {
 });
 
 class TestModel implements NotifyPropertyChanged {
-  readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
+  readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
   valueA = 0;
   valueB = new ObservableArray<number>();

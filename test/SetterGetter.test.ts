@@ -23,7 +23,7 @@ test('Basic', () => {
 });
 
 class TestModel implements NotifyPropertyChanged {
-  readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
+  readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
   get valueA() {
     return 999;

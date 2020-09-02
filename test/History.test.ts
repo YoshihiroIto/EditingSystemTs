@@ -67,7 +67,7 @@ test('PropertyChanged', () => {
   let count = 0;
   let propertyName = '';
 
-  model.PropertyChanged.on((_, e) => {
+  model.propertyChanged.on((_, e) => {
     ++count;
 
     propertyName = e.propertyName;
@@ -105,7 +105,7 @@ test('PropertyChanged', () => {
 });
 
 class TestModel implements NotifyPropertyChanged {
-  readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
+  readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
   valueA = 0;
   valueB = 0;

@@ -1,7 +1,7 @@
 import { EventArgs, TypedEvent } from './TypedEvent';
 
 export interface NotifyPropertyChanged {
-  readonly PropertyChanged: TypedEvent<PropertyChangedEventArgs>;
+  readonly propertyChanged: TypedEvent<PropertyChangedEventArgs>;
 }
 
 export class PropertyChangedEventArgs extends EventArgs {

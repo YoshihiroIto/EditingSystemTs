@@ -336,7 +336,7 @@ test('ObservableArray<T>.splice() deleteCount, items', () => {
 });
 
 class TestModel implements NotifyPropertyChanged {
-  readonly PropertyChanged = new TypedEvent<PropertyChangedEventArgs>();
+  readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
   valueOc = new ObservableArray<string>();
 

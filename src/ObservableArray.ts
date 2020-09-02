@@ -2,13 +2,13 @@ import { TypedEvent } from './TypedEvent';
 import { NotifyCollectionChangedEventArgs, NotifyCollectionChangedActions } from './Event';
 
 export class ObservableArray<T> extends Array<T> {
-  get CollectionChanged(): TypedEvent<NotifyCollectionChangedEventArgs> {
-    this._CollectionChanged ??= new TypedEvent<NotifyCollectionChangedEventArgs>();
+  get collectionChanged(): TypedEvent<NotifyCollectionChangedEventArgs> {
+    this._collectionChanged ??= new TypedEvent<NotifyCollectionChangedEventArgs>();
 
-    return this._CollectionChanged;
+    return this._collectionChanged;
   }
 
-  private _CollectionChanged: TypedEvent<NotifyCollectionChangedEventArgs> | null = null;
+  private _collectionChanged: TypedEvent<NotifyCollectionChangedEventArgs> | null = null;
 
   constructor() {
     super();
@@ -19,7 +19,7 @@ export class ObservableArray<T> extends Array<T> {
 
     const r = super.push(...items);
 
-    this._CollectionChanged?.emit(
+    this._collectionChanged?.emit(
       this,
       new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, length, -1)
     );
@@ -31,7 +31,7 @@ export class ObservableArray<T> extends Array<T> {
     const r = super.pop();
 
     if (r != undefined) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, this.length)
       );
@@ -44,7 +44,7 @@ export class ObservableArray<T> extends Array<T> {
     const r = super.shift();
 
     if (r != undefined) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, [r], -1, 0)
       );
@@ -56,7 +56,7 @@ export class ObservableArray<T> extends Array<T> {
   unshift(...items: T[]): number {
     const r = super.unshift(...items);
 
-    this._CollectionChanged?.emit(
+    this._collectionChanged?.emit(
       this,
       new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, 0, -1)
     );
@@ -70,7 +70,7 @@ export class ObservableArray<T> extends Array<T> {
     const r = super.sort(compareFn);
 
     if (r != undefined) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, old, -1, 0)
       );
@@ -85,7 +85,7 @@ export class ObservableArray<T> extends Array<T> {
     const r = super.reverse();
 
     if (r != undefined) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Reset, null, old, -1, 0)
       );
@@ -104,7 +104,7 @@ export class ObservableArray<T> extends Array<T> {
     const isBatch = deleteCount > 0 && items.length > 0;
 
     if (deleteCount > 0) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Remove, null, r, -1, start, {
           isBeginBatch: isBatch,
@@ -113,7 +113,7 @@ export class ObservableArray<T> extends Array<T> {
     }
 
     if (items.length > 0) {
-      this._CollectionChanged?.emit(
+      this._collectionChanged?.emit(
         this,
         new NotifyCollectionChangedEventArgs(NotifyCollectionChangedActions.Add, items, null, start, -1, {
           isEndBatch: isBatch,
