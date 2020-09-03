@@ -177,7 +177,7 @@ export class History {
     const propertyNames = Object.getOwnPropertyNames(target);
     for (const propertyName of propertyNames) {
       // 管理外プロパティをはじく
-      if (propertyName === 'PropertyChanged') {
+      if (propertyName === 'propertyChanged') {
         continue;
       }
 
