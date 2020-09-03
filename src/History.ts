@@ -163,7 +163,16 @@ export class History {
     this.redoStack.splice(0, this.redoStack.length);
   }
 
-  register(target: NotifyPropertyChanged): void {
+  register(
+    target: NotifyPropertyChanged,
+    {
+      arrowPropertyNames = null,
+      ignorePropertyNames = null,
+    }: {
+      arrowPropertyNames?: Set<string> | null;
+      ignorePropertyNames?: Set<string> | null;
+    } = {}
+  ): void {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const t = target as any;
     const ignoreUndoProperties = t[EditingSystem.ignoreName] as Set<string>;
@@ -184,6 +193,18 @@ export class History {
       // 無視プロパティをはじく
       if (ignoreUndoProperties != null) {
         if (ignoreUndoProperties.has(propertyName)) {
+          continue;
+        }
+      }
+
+      if (arrowPropertyNames != null) {
+        if (arrowPropertyNames.has(propertyName) == false) {
+          continue;
+        }
+      }
+
+      if (ignorePropertyNames != null) {
+        if (ignorePropertyNames.has(propertyName)) {
           continue;
         }
       }
