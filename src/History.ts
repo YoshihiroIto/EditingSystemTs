@@ -193,6 +193,10 @@ export class History {
         continue;
       }
 
+      if (desc.configurable === false) {
+        continue;
+      }
+
       if (desc.value instanceof ObservableArray) {
         desc.value.collectionChanged.on(onCollectionChanged);
       }
