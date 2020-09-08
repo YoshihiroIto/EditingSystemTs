@@ -2,19 +2,19 @@ import { Assert } from './Assert';
 import { NotifyCollectionChangedActions, NotifyCollectionChangedEventArgs } from './Event';
 import { ObservableArray } from './ObservableArray';
 
-export default function createMirroringArray<T>(source: ObservableArray<T>): MirroringArray<T> {
-  const target = new MirroringArrayInternal<T>();
+export default function createReadonlyObservableArray<T>(source: ObservableArray<T>): ReadonlyObservableArray<T> {
+  const target = new ReadonlyObservableArrayInternal<T>();
 
   target.setup(source);
 
   return target;
 }
 
-export abstract class MirroringArray<T> extends Array<T> {
+export abstract class ReadonlyObservableArray<T> extends Array<T> {
   abstract dispose(): void;
 }
 
-class MirroringArrayInternal<T> extends MirroringArray<T> {
+class ReadonlyObservableArrayInternal<T> extends ReadonlyObservableArray<T> {
   setup(source: ObservableArray<T>): void {
     this.source = source;
 

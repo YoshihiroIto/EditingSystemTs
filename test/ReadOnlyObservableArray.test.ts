@@ -1,11 +1,12 @@
 import { ObservableArray } from '../src/ObservableArray';
-import createMirroringArray from '../src/MirroringArray';
+import createReadOnlyObservableArray from '../src/ReadOnlyObservableArray';
+
 test('initial', () => {
   const source = new ObservableArray<string>();
 
   source.push('A', 'B', 'C', 'D');
 
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   expect(target.length).toBe(4);
   expect(target[0]).toBe('A');
@@ -18,7 +19,7 @@ test('initial', () => {
 
 test('push()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('A', 'B', 'C', 'D');
 
@@ -33,7 +34,7 @@ test('push()', () => {
 
 test('pop()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('A', 'B', 'C', 'D');
 
@@ -55,7 +56,7 @@ test('pop()', () => {
 
 test('shift()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('A', 'B', 'C', 'D');
 
@@ -77,7 +78,7 @@ test('shift()', () => {
 
 test('unshift()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('A', 'B', 'C', 'D');
 
@@ -102,7 +103,7 @@ test('unshift()', () => {
 
 test('sort()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
@@ -125,7 +126,7 @@ test('sort()', () => {
 
 test('reverse()', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('9', '8', '7', '6', '5', '4', '3', '2', '1', '0');
 
@@ -148,7 +149,7 @@ test('reverse()', () => {
 
 test('splice() deleteCount is null', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -164,7 +165,7 @@ test('splice() deleteCount is null', () => {
 
 test('splice() deleteCount is not null', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
@@ -184,7 +185,7 @@ test('splice() deleteCount is not null', () => {
 
 test('splice() deleteCount, items', () => {
   const source = new ObservableArray<string>();
-  const target = createMirroringArray<string>(source);
+  const target = createReadOnlyObservableArray<string>(source);
 
   source.push('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
 
