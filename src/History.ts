@@ -106,7 +106,7 @@ export class History {
     }
   }
 
-  beginBatchInternal(): void {
+  private beginBatchInternal(): void {
     Assert.isNull(this.batchHistory);
 
     this.batchHistory = new BatchHistory();
