@@ -180,9 +180,6 @@ export class History {
       delete t[EditingSystem.ignoreName];
     }
 
-    const onCollectionChanged = (sender: unknown, e: NotifyCollectionChangedEventArgs) =>
-      this.OnCollectionChanged(sender, e);
-
     const propertyNames = Object.getOwnPropertyNames(target);
     for (const propertyName of propertyNames) {
       // 管理外プロパティをはじく
@@ -219,7 +216,7 @@ export class History {
       }
 
       if (desc.value instanceof ObservableArray) {
-        desc.value.collectionChanged.on(onCollectionChanged);
+        desc.value.collectionChanged.on(this.onCollectionChanged);
       }
 
       // 保存領域を作る
@@ -241,7 +238,7 @@ export class History {
               isInDoing = true;
 
               if (packing instanceof ObservableArray) {
-                packing.collectionChanged.off(onCollectionChanged);
+                packing.collectionChanged.off(this.onCollectionChanged);
               }
 
               const d = Object.getOwnPropertyDescriptor(target, propertyName);
@@ -252,7 +249,7 @@ export class History {
               packing = v;
 
               if (packing instanceof ObservableArray) {
-                packing.collectionChanged.on(onCollectionChanged);
+                packing.collectionChanged.on(this.onCollectionChanged);
               }
 
               this.raisePropertyChanged(target, propertyName);
@@ -276,7 +273,7 @@ export class History {
     model.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
   }
 
-  private OnCollectionChanged(sender: unknown, e: NotifyCollectionChangedEventArgs): void {
+  private onCollectionChanged = (sender: unknown, e: NotifyCollectionChangedEventArgs): void => {
     if (this.isInUndoing) {
       return;
     }
@@ -337,7 +334,7 @@ export class History {
     } else {
       throw new Error();
     }
-  }
+  };
 }
 
 class HistoryAction {
