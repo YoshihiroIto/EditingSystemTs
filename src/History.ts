@@ -155,6 +155,7 @@ export class History {
       this.batchHistory.push(undo, redo);
     } else {
       this.undoStack.push(new HistoryAction(undo, redo));
+      this.redoStack.splice(0);
     }
   }
 

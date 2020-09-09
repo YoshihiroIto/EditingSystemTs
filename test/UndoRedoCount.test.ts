@@ -37,6 +37,25 @@ test('Basic', () => {
   expect(history.undoRedoCount).toEqual([0, 0]);
 });
 
+test('Redo clear', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.undoRedoCount).toEqual([0, 0]);
+
+  model.valueA = 123;
+  expect(history.undoRedoCount).toEqual([1, 0]);
+
+  model.valueA = 456;
+  expect(history.undoRedoCount).toEqual([2, 0]);
+
+  history.undo();
+  expect(history.undoRedoCount).toEqual([1, 1]);
+
+  model.valueA = 789;
+  expect(history.undoRedoCount).toEqual([2, 0]);
+});
+
 class TestModel implements NotifyPropertyChanged {
   readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
