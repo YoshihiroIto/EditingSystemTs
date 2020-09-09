@@ -278,61 +278,59 @@ export class History {
       return;
     }
 
-    if (sender instanceof ObservableArray) {
-      if (e.isBeginBatch) {
-        this.beginBatch();
-      }
+    const target = sender as ObservableArray<unknown>;
 
-      switch (e.action) {
-        case NotifyCollectionChangedActions.Add:
-          {
-            const addItems = e.newItems;
-            Assert.isNotNull(addItems);
+    if (e.isBeginBatch) {
+      this.beginBatch();
+    }
 
-            const undo = () => sender.splice(e.newStartingIndex, addItems.length);
-            const redo = () => sender.splice(e.newStartingIndex, 0, ...addItems);
+    switch (e.action) {
+      case NotifyCollectionChangedActions.Add:
+        {
+          const addItems = e.newItems;
+          Assert.isNotNull(addItems);
 
-            this.push(undo, redo);
-          }
+          const undo = () => target.spliceCore(e.newStartingIndex, addItems.length);
+          const redo = () => target.spliceCore(e.newStartingIndex, 0, ...addItems);
 
-          break;
+          this.push(undo, redo);
+        }
 
-        case NotifyCollectionChangedActions.Remove:
-          {
+        break;
+
+      case NotifyCollectionChangedActions.Remove:
+        {
+          const oldItems = e.oldItems;
+          Assert.isNotNull(oldItems);
+
+          const undo = () => target.spliceCore(e.oldStartingIndex, 0, ...oldItems);
+          const redo = () => target.spliceCore(e.oldStartingIndex, oldItems.length);
+
+          this.push(undo, redo);
+        }
+        break;
+
+      case NotifyCollectionChangedActions.Reset:
+        {
+          const doProc = () => {
             const oldItems = e.oldItems;
             Assert.isNotNull(oldItems);
 
-            const undo = () => sender.splice(e.oldStartingIndex, 0, ...oldItems);
-            const redo = () => sender.splice(e.oldStartingIndex, oldItems.length);
+            const old = ObservableArray.from(target);
+            target.spliceCore(0);
+            target.pushCore(...oldItems);
+            e.setOldItemsInternal(old);
+          };
+          this.push(doProc, doProc);
+        }
+        break;
 
-            this.push(undo, redo);
-          }
-          break;
+      default:
+        throw new Error(`Not implement: ${e.action}`);
+    }
 
-        case NotifyCollectionChangedActions.Reset:
-          {
-            const doProc = () => {
-              const oldItems = e.oldItems;
-              Assert.isNotNull(oldItems);
-
-              const old = ObservableArray.from(sender);
-              sender.splice(0);
-              sender.push(...oldItems);
-              e.setOldItemsInternal(old);
-            };
-            this.push(doProc, doProc);
-          }
-          break;
-
-        default:
-          throw new Error(`Not implement: ${e.action}`);
-      }
-
-      if (e.isEndBatch) {
-        this.endBatch();
-      }
-    } else {
-      throw new Error();
+    if (e.isEndBatch) {
+      this.endBatch();
     }
   };
 }
