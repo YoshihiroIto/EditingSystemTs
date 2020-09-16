@@ -5,7 +5,7 @@ export interface NotifyPropertyChanged {
 }
 
 export class PropertyChangedEventArgs extends EventArgs {
-  constructor(public readonly propertyName: string) {
+  constructor(readonly propertyName: string) {
     super();
   }
 }
@@ -22,7 +22,7 @@ export const NotifyCollectionChangedActions = {
 export type NotifyCollectionChangedAction = typeof NotifyCollectionChangedActions[keyof typeof NotifyCollectionChangedActions];
 
 export class NotifyCollectionChangedEventArgs extends EventArgs {
-  public static readonly empty: NotifyCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(
+  static readonly empty: NotifyCollectionChangedEventArgs = new NotifyCollectionChangedEventArgs(
     NotifyCollectionChangedActions.Unset,
     null,
     null,
@@ -52,7 +52,7 @@ export class NotifyCollectionChangedEventArgs extends EventArgs {
     return this._isEndBatch;
   }
 
-  public setOldItemsInternal(items: unknown[] | null): void {
+  setOldItemsInternal(items: unknown[] | null): void {
     this._oldItems = items;
   }
 

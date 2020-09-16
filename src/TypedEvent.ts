@@ -34,5 +34,5 @@ export class TypedEvent<T = EventArgs> {
 }
 
 export class EventArgs {
-  public static readonly empty: EventArgs = new EventArgs();
+  static readonly empty: EventArgs = new EventArgs();
 }
