@@ -7,6 +7,7 @@ import {
 import { ObservableArray } from './ObservableArray';
 import { Assert } from './Assert';
 import { EditingSystem } from './Decorators';
+import { EventArgs, TypedEvent } from './TypedEvent';
 
 export class History {
   get canUndo(): boolean {
@@ -22,6 +23,8 @@ export class History {
   get undoRedoCount(): [undo: number, redo: number] {
     return [this.undoStack.length, this.redoStack.length];
   }
+
+  readonly edited = new TypedEvent<EventArgs>();
 
   private readonly undoStack = new Array<HistoryAction>();
   private readonly redoStack = new Array<HistoryAction>();
@@ -253,7 +256,8 @@ export class History {
                 packing.collectionChanged.on(this.onCollectionChanged);
               }
 
-              this.raisePropertyChanged(target, propertyName);
+              target.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
+              this.invokeEdited();
             } finally {
               isInDoing = false;
             }
@@ -268,10 +272,6 @@ export class History {
         },
       });
     }
-  }
-
-  private raisePropertyChanged(model: NotifyPropertyChanged, propertyName: string) {
-    model.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
   }
 
   private onCollectionChanged = (sender: unknown, e: NotifyCollectionChangedEventArgs): void => {
@@ -291,10 +291,17 @@ export class History {
           const addItems = e.newItems;
           Assert.isNotNull(addItems);
 
-          const undo = () => target.spliceCore(e.newStartingIndex, addItems.length);
-          const redo = () => target.spliceCore(e.newStartingIndex, 0, ...addItems);
+          const undo = () => {
+            target.spliceCore(e.newStartingIndex, addItems.length);
+            this.invokeEdited();
+          };
+          const redo = () => {
+            target.spliceCore(e.newStartingIndex, 0, ...addItems);
+            this.invokeEdited();
+          };
 
           this.push(undo, redo);
+          this.invokeEdited();
         }
 
         break;
@@ -304,10 +311,17 @@ export class History {
           const oldItems = e.oldItems;
           Assert.isNotNull(oldItems);
 
-          const undo = () => target.spliceCore(e.oldStartingIndex, 0, ...oldItems);
-          const redo = () => target.spliceCore(e.oldStartingIndex, oldItems.length);
+          const undo = () => {
+            target.spliceCore(e.oldStartingIndex, 0, ...oldItems);
+            this.invokeEdited();
+          };
+          const redo = () => {
+            target.spliceCore(e.oldStartingIndex, oldItems.length);
+            this.invokeEdited();
+          };
 
           this.push(undo, redo);
+          this.invokeEdited();
         }
         break;
 
@@ -321,8 +335,10 @@ export class History {
             target.spliceCore(0);
             target.pushCore(...oldItems);
             e.setOldItemsInternal(old);
+            this.invokeEdited();
           };
           this.push(doProc, doProc);
+          this.invokeEdited();
         }
         break;
 
@@ -334,6 +350,10 @@ export class History {
       this.endBatch();
     }
   };
+
+  private invokeEdited(): void {
+    this.edited.emit(this, EventArgs.empty);
+  }
 }
 
 class HistoryAction {
