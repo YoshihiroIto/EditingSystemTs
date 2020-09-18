@@ -107,6 +107,8 @@ test('Cannot call undo during batch recording', () => {
 
   history.beginBatch();
 
+  model.valueA = 888;
+
   expect(() => history.undo()).toThrow();
 });
 
@@ -123,7 +125,49 @@ test('Cannot call redo during batch recording', () => {
 
   history.beginBatch();
 
+  model.valueA = 888;
+
   expect(() => history.redo()).toThrow();
+});
+
+test('Can call undo during batch recording without editing', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
+
+  model.valueA = 999;
+  model.valueB = 'XYZ';
+
+  history.beginBatch();
+
+  try {
+    history.undo();
+  } catch {
+    expect(false).toBe(true);
+  }
+});
+
+test('Can call redo during batch recording without editing', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  expect(history.canUndo).toBeFalsy();
+  expect(history.canRedo).toBeFalsy();
+  expect(history.canClear).toBeFalsy();
+
+  model.valueA = 999;
+  model.valueB = 'XYZ';
+
+  history.beginBatch();
+
+  try {
+    history.redo();
+  } catch {
+    expect(false).toBe(true);
+  }
 });
 
 test('Batch recording has not begun ', () => {

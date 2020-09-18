@@ -31,8 +31,12 @@ export class History {
 
   private isInUndoing = false;
 
+  private get hasStack(): boolean {
+    return this.undoStack.length > 0 || this.redoStack.length > 0;
+  }
+
   undo(): void {
-    if (this.isInBatch) {
+    if (this.isInBatch && this.batchHistory?.hasStack) {
       throw new Error("Can't call undo() during batch recording.");
     }
 
@@ -58,7 +62,7 @@ export class History {
   }
 
   redo(): void {
-    if (this.isInBatch) {
+    if (this.isInBatch && this.batchHistory?.hasStack) {
       throw new Error("Can't call undo() during batch recording.");
     }
 
