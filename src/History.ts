@@ -254,13 +254,15 @@ export class History {
                 d.set(v);
               }
 
+              const oldValue = packing;
+
               packing = v;
 
               if (packing instanceof ObservableArray) {
                 packing.collectionChanged.on(this.onCollectionChanged);
               }
 
-              target.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName));
+              target.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName, oldValue));
               this.invokeEdited();
             } finally {
               isInDoing = false;

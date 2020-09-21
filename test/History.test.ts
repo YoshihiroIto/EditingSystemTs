@@ -104,6 +104,35 @@ test('PropertyChanged', () => {
   expect(model.valueA).toBe(0);
 });
 
+test('oldValue', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  let oldValue = -9999;
+
+  model.propertyChanged.on((_, e) => {
+    oldValue = e.oldValue as number;
+  });
+
+  model.valueA = 1;
+  expect(oldValue).toBe(0);
+
+  model.valueB = 10;
+  expect(oldValue).toBe(0);
+
+  model.valueC = 100;
+  expect(oldValue).toBe(0);
+
+  history.undo();
+  expect(oldValue).toBe(100);
+
+  history.undo();
+  expect(oldValue).toBe(10);
+
+  history.undo();
+  expect(oldValue).toBe(1);
+});
+
 class TestModel implements NotifyPropertyChanged {
   readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 
