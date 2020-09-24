@@ -229,52 +229,42 @@ export class History {
 
       // 保存領域を作る
       let packing = desc.value;
-      let isInDoing = false;
 
       // 元のプロパティのセッター、ゲッターを作る
       Object.defineProperty(target, propertyName, {
         get: () => packing,
         set: value => {
-          if (isInDoing) {
-            return;
+          if (this.isInUndoing == false) {
+            const oldValue = packing;
+
+            this.push(
+              () => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const anyTarget = target as any;
+                anyTarget[propertyName] = oldValue;
+              },
+              () => {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const anyTarget = target as any;
+                anyTarget[propertyName] = value;
+              }
+            );
           }
 
-          const oldValue = packing;
+          if (packing instanceof ObservableArray) {
+            packing.collectionChanged.off(this.onCollectionChanged);
+          }
 
-          const doProc = (v: unknown) => {
-            try {
-              isInDoing = true;
+          const old = packing;
 
-              if (packing instanceof ObservableArray) {
-                packing.collectionChanged.off(this.onCollectionChanged);
-              }
+          packing = value;
 
-              const d = Object.getOwnPropertyDescriptor(target, propertyName);
-              if (d?.set != null) {
-                d.set(v);
-              }
+          if (packing instanceof ObservableArray) {
+            packing.collectionChanged.on(this.onCollectionChanged);
+          }
 
-              const oldValue = packing;
-
-              packing = v;
-
-              if (packing instanceof ObservableArray) {
-                packing.collectionChanged.on(this.onCollectionChanged);
-              }
-
-              target.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName, oldValue));
-              this.invokeEdited();
-            } finally {
-              isInDoing = false;
-            }
-          };
-
-          this.push(
-            () => doProc(oldValue),
-            () => doProc(value)
-          );
-
-          doProc(value);
+          target.propertyChanged.emit(this, new PropertyChangedEventArgs(propertyName, old));
+          this.invokeEdited();
         },
       });
     }
