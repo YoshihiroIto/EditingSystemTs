@@ -31,6 +31,35 @@ test('Basic', () => {
   expect(model.valueD).toEqual(1);
 });
 
+test('Ignore Property', () => {
+  const history = new History();
+  const model = new TestModel(history);
+
+  let lastPropertyName = '';
+
+  model.propertyChanged.on((_, e) => {
+    lastPropertyName = e.propertyName;
+  });
+
+  model.valueA = 1;
+  expect(lastPropertyName).toEqual('valueA');
+
+  model.valueB = 1;
+  expect(lastPropertyName).toEqual('valueB');
+
+  model.valueC = 1;
+  expect(lastPropertyName).toEqual('valueC');
+
+  model.valueD = 1;
+  expect(lastPropertyName).toEqual('valueD');
+
+  history.undo();
+  expect(lastPropertyName).toEqual('valueB');
+
+  history.undo();
+  expect(lastPropertyName).toEqual('valueA');
+});
+
 class TestModel implements NotifyPropertyChanged {
   readonly propertyChanged = new TypedEvent<PropertyChangedEventArgs>();
 

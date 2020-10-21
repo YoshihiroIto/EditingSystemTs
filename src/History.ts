@@ -195,13 +195,6 @@ export class History {
         continue;
       }
 
-      // 無視プロパティをはじく
-      if (ignoreUndoProperties != null) {
-        if (ignoreUndoProperties.has(propertyName)) {
-          continue;
-        }
-      }
-
       if (arrowPropertyNames != null) {
         if (arrowPropertyNames.has(propertyName) == false) {
           continue;
@@ -223,6 +216,8 @@ export class History {
         continue;
       }
 
+      const isIgnore = ignoreUndoProperties != null && ignoreUndoProperties.has(propertyName);
+
       if (desc.value instanceof ObservableArray) {
         desc.value.collectionChanged.on(this.onCollectionChanged);
       }
@@ -234,21 +229,23 @@ export class History {
       Object.defineProperty(target, propertyName, {
         get: () => packing,
         set: value => {
-          if (this.isInUndoing == false) {
-            const oldValue = packing;
+          if (isIgnore === false) {
+            if (this.isInUndoing == false) {
+              const oldValue = packing;
 
-            this.push(
-              () => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const anyTarget = target as any;
-                anyTarget[propertyName] = oldValue;
-              },
-              () => {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                const anyTarget = target as any;
-                anyTarget[propertyName] = value;
-              }
-            );
+              this.push(
+                () => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const anyTarget = target as any;
+                  anyTarget[propertyName] = oldValue;
+                },
+                () => {
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                  const anyTarget = target as any;
+                  anyTarget[propertyName] = value;
+                }
+              );
+            }
           }
 
           if (packing instanceof ObservableArray) {
