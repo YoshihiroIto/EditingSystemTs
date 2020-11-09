@@ -1,11 +1,9 @@
-﻿// ref: https://typescript-jp.gitbook.io/deep-dive/main-1/typed-event
+﻿import { Disposable } from './Disposable';
+
+// ref: https://typescript-jp.gitbook.io/deep-dive/main-1/typed-event
 
 export interface Listener<T> {
   (sender: unknown, event: T): void;
-}
-
-export interface Disposable {
-  dispose(): void;
 }
 
 export class TypedEvent<T = EventArgs> {
