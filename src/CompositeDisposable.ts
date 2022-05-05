@@ -1,4 +1,4 @@
-import { Disposable } from './TypedEvent';
+import { Disposable } from './Disposable';
 
 export class CompositeDisposable extends Array<Disposable> implements Disposable {
   dispose(): void {
